@@ -29,6 +29,7 @@
                         <div data-icon="g" class="icon card-icon"></div>
                         <div data-icon="h" class="icon card-icon"></div>
                         <div data-icon="i" class="icon card-icon"></div>
+                        <div data-icon="j" class="icon card-icon"></div>
                     </div>
                 </div>
                 <div class="card test-card copy-card">
@@ -40,6 +41,7 @@
                         <div data-icon="g" class="icon card-icon"></div>
                         <div data-icon="h" class="icon card-icon"></div>
                         <div data-icon="i" class="icon card-icon"></div>
+                        <div data-icon="j" class="icon card-icon"></div>
                     </div>
                 </div>
             </div>
@@ -49,10 +51,10 @@
                     A fake / hidden checkbox is used as click reciever,
                     so you can use the :checked selector on it.
                     -->
-                    <input type="checkbox" />
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <input type="checkbox" id="deck-burger" >
+                    <span class="burger-span"></span>
+                    <span class="burger-span"></span>
+                    <span class="burger-span"></span>
                     
                     <div id="deck-view-tray">
                         <div class="deck-action">
@@ -65,6 +67,14 @@
                                     <div data-icon="g" class="icon card-icon"></div>
                                     <div data-icon="h" class="icon card-icon"></div>
                                     <div data-icon="i" class="icon card-icon"></div>
+                                </div>
+                            </div>
+                            <div class="deck-control">
+                                <div data-icon="k" class="icon deck-control-shuffle"></div>
+                                <div class="deck-control-show-cards">
+                                    <div data-icon="l" class="icon"></div>
+                                    <input type="checkbox" class="deck-control-show-cards-check" name="deck-control-open-cards" id="deck-control-open-cards">
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -456,11 +466,7 @@
                                 </div>
                             </div>
                         </div>
-                      <!-- <a href="#"><li>Home</li></a>
-                      <a href="#"><li>About</li></a>
-                      <a href="#"><li>Info</li></a>
-                      <a href="#"><li>Contact</li></a>
-                      <a href="https://erikterwan.com/" target="_blank"><li>Show me more</li></a> -->
+                      
                     </div>
                   </div>
             <!-- </div> -->
