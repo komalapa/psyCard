@@ -83,3 +83,12 @@
 .icon-unlocked:before {
   content: "\6f";
 }
+.icon-plus:before {
+  content: "\70";
+}
+.icon-arrow-left:before {
+  content: "\71";
+}
+.icon-arrow-right:before {
+  content: "\72";
+}
