@@ -1,0 +1,258 @@
+body {
+    margin:0;
+    padding:0;
+}
+.main-menu {
+    display: flex;
+    justify-content: flex-start;
+    padding: 8px 40px;
+    width: 100%;
+    background-color: #fff;
+    position: absolute;
+    top: -35px;
+    transition: top 0.5s;
+    border-bottom: 4px solid lightgrey;
+    box-sizing: border-box;
+}
+.main-menu:after{
+    display: block;
+    background-color: lightgray;
+    content: "M E N U";
+    font-size: 9px;
+    line-height: 13px;
+    font-weight: bold;
+    height: 13px;
+    padding: 0 3px;
+    position: absolute;
+    top: 36px;
+    left: 50px;
+    width: 35px;
+    border-radius: 0 0 3px 3px;
+}
+.main-menu:hover{
+    top:0;
+}
+.main-menu-list{
+    display: flex;
+    list-style: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin:0;
+    padding:0;
+}
+.main-menu-list-item a{
+    text-decoration: none;
+    display: block;
+    margin-right: 20px;
+    color:gray;
+}
+.main-menu-list-item a:hover{
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);   
+}
+
+.workspace{
+    display: block;
+    background-color: ivory;
+    width:100vW;
+    height: 100vh;
+}
+.field{
+    height: 100%;
+}
+/*https://codepen.io/erikterwan/pen/EVzeRP */
+/* Made by Erik Terwan
+ 24th of November 2015
+ MIT License */
+#deck-view-control
+{
+  display: block;
+  position: relative;
+  bottom: 50px;
+  left: 10px;
+  
+  z-index: 1;
+  
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#deck-view-control a
+{
+  text-decoration: none;
+  color: #232323;
+  
+  transition: color 0.3s ease;
+}
+
+#deck-view-control a:hover
+{
+  color: tomato;
+}
+
+
+#deck-view-control input
+{
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  
+  cursor: pointer;
+  
+  opacity: 0; /* hide this */
+  z-index: 2; /* and place it over the hamburger */
+  
+  -webkit-touch-callout: none;
+}
+
+/*
+ * Just a quick hamburger
+ */
+#deck-view-control span
+{
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  
+  background: #cdcdcd;
+  border-radius: 3px;
+  
+  z-index: 1;
+  
+  transform-origin: 4px 0px;
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+#deck-view-control span:first-child
+{
+  transform-origin: 0% 0%;
+}
+
+#deck-view-control span:nth-last-child(2)
+{
+  transform-origin: 0% 100%;
+}
+
+/* 
+ * Transform all the slices of hamburger
+ * into a crossmark.
+ */
+#deck-view-control input:checked ~ span
+{
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+/*
+ * But let's hide the middle one.
+ */
+#deck-view-control input:checked ~ span:nth-last-child(3)
+{
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+/*
+ * Ohyeah and the last one should go the other direction
+ */
+#deck-view-control input:checked ~ span:nth-last-child(2)
+{
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+/*
+ * Make this absolute positioned
+ * at the top left of the screen
+ */
+#deck-view-tray
+{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin: 0px 0 -12px -10px;
+    height: 200px;
+    padding: 10px;
+    background: #ededed;
+  
+  -webkit-font-smoothing: antialiased;
+  /* to stop flickering of text in safari */
+  
+  transform-origin: 0% 0%;
+  transform: translate(-100%, 0);
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+
+#deck-view-tray li
+{
+  padding: 10px 0;
+  font-size: 22px;
+}
+
+/*
+ * And let's slide it in from the left
+ */
+#deck-view-control input:checked ~ div
+{
+  transform: none;
+}
+.field{
+    padding:20px;
+    box-sizing: border-box;
+}
+.card{
+    width: 60px;
+    height: 85px;
+    border: 2px solid black;
+    border-radius: 10px;
+    /* position:relative; */
+    display: flex;
+    flex-wrap: wrap;
+}
+.card-position-controls-wrp{
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.card-controls-left-wrp{
+    display: flex;
+    flex-direction: column;
+    margin-left: -18px;
+    padding: 0 5px;
+}
+.card-icon{
+    font-size: 10px;
+    color:gray;
+}
+.card-icon:hover{
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.card-resize{
+    margin-top: -9px;
+    margin-right: -9px;
+}
+
+.card-rotate{
+    margin-top: -8px;
+    margin-left: -12px;
+}
+
+.card-controls{
+    display: none;
+}
+.card:hover .card-controls{
+    display: flex;
+}
+ 
+#deck-view .card-controls{
+    display:none
+}
