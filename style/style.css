@@ -181,6 +181,8 @@ body {
     padding: 20px;
     height: 100%;
     box-sizing: border-box;
+    display:flex;
+    flex-wrap: wrap;
 }
 
 .card {
@@ -294,9 +296,77 @@ body {
 .other-card:hover .card-controls {
     display: flex;
 }
+.other-card .card-icon-rotate:hover{
+    transform: rotate(360deg);
+    transition: transform 0.5s;
+}
 
 /* end other card control */
 
+/*3rd card*/
+.third-card {
+    resize: both;
+    overflow: hidden;
+}
+.third-card .card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17px;
+    height: 17px;
+    margin: 1px;
+    font-size: 12px;
+    color: black;
+    opacity: 0.5;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: opacity 0.2s;
+}
+.third-card .card-icon:hover {
+    opacity: 0.7;  
+}
+.third-card .card-controls-wrp {
+    /* display: flex; */
+    justify-content: center;
+    flex-direction: column;
+    display: none;
+}
+.third-card:hover .card-controls-wrp {
+    display: flex;
+}
+.card-rotate-btn{
+    position: relative;
+}
+.card-rotate-btn .card-rotate-checkbox{
+    position:absolute;
+    width: 15px;
+    height: 15px;
+    top: -1px;
+    left: -2px;
+    opacity: 0;
+}
+.card-rotate-btn:hover .card-icon{
+    transform: rotate(360deg);
+    transition: transform 0.5s;
+    opacity: 0.7;
+}
+.card-mirror-btn{
+    position: relative;
+}
+.card-mirror-btn .card-mirror-checkbox{
+    position:absolute;
+    width: 15px;
+    height: 15px;
+    top: -1px;
+    left: -2px;
+    opacity: 0;
+}
+.card-mirror-btn:hover .card-icon{
+    transform: scaleX(-1);
+    transition: transform 0.5s;
+    opacity: 0.7;
+}
+/* end3rd card*/
 
 #deck-view-tray .card-controls {
     display: none
