@@ -65,3 +65,30 @@
 .icon-long-arrow-up:before {
   content: "\69";
 }
+.icon-mirror:before {
+  content: "\6a";
+}
+.icon-random:before {
+  content: "\6b";
+}
+.icon-eye:before {
+  content: "\6c";
+}
+.icon-eye-slash:before {
+  content: "\6d";
+}
+.icon-locked:before {
+  content: "\6e";
+}
+.icon-unlocked:before {
+  content: "\6f";
+}
+.icon-plus:before {
+  content: "\70";
+}
+.icon-arrow-left:before {
+  content: "\71";
+}
+.icon-arrow-right:before {
+  content: "\72";
+}
