@@ -17,6 +17,10 @@ class Card {
     mirror(isMirrorred){
         this.isMirrorred=isMirrorred;
     }
+
+    cardMoving(){
+        alert("move")
+    }
   }
 
   function createCard(card){
@@ -71,7 +75,11 @@ class Card {
     let deleteIcon = document.createElement("div");
     deleteIcon.className="icon card-icon";
     deleteIcon.setAttribute("data-icon","g");
-    deleteIcon.onclick = () => alert("DELETE " + card.cardId)
+    deleteIcon.onclick = () => {
+        alert("DELETE " + card.cardId);
+        document.getElementById(card.cardId).remove();
+        card.isOnField=false
+    }
     newCardControls.appendChild(deleteIcon);
 
     let downIcon = document.createElement("div");
@@ -115,6 +123,8 @@ class Card {
 
     let newCardHTML = document.createElement("div");
     newCardHTML.className="card test-card third-card";
+    newCardHTML.id=card.cardId;
+    
     
     let cardImgWrp = document.createElement("div");//оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
     cardImgWrp.id=card.cardId+"-img-wrp";
@@ -130,4 +140,5 @@ class Card {
   let field = document.getElementById("field");
   let card = new Card();
   let newCard=createCard(card)
-  field.appendChild(newCard)
+  field.appendChild(newCard);
+  card.isOnField=true;
