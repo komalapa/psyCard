@@ -205,18 +205,24 @@ body {
     background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
     position: relative;
 }
-.card .rotated-card{
-    transform: rotate(180deg);
-}
 .card .mirrorred-card{
     transform: scaleX(-1);
 }
-.card img{
+.card .rotated-card{
+    transform: rotate(180deg);
+}
+.card-img-wrp{
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: 0;
     transform: rotate(0deg);
+    transition: transform 0.3s;
+}
+
+.card img{
+    width: 100%;
+    height: 100%;
+    transform: scaleX(1);
     transition: transform 0.3s;
 }
 .copy-card .card-position-controls-wrp {

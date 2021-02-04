@@ -11,6 +11,12 @@ class Card {
       this.isOpen = false; //false - рубашкой вверх
       this.coordinates = {"x":"30px", "y":"30px", "z":1} // x,y координаты для абсолютного позиционирования, z - z-индекс
     }
+    rotate(isRotated=false){
+        this.isRotated=isRotated
+    }
+    mirror(isMirrorred){
+        this.isMirrorred=isMirrorred;
+    }
   }
 
   function createCard(card){
@@ -49,12 +55,14 @@ class Card {
     rotateCheckbox.id=card.cardId + "isrotated";
     rotateCheckbox.name=card.cardId + "isrotated";
     rotateCheckbox.onchange = () => {
-        //alert(rotateCheckbox.checked)
+        card.rotate(rotateCheckbox.checked)
         if (rotateCheckbox.checked) {
-            document.getElementById(card.cardId+"-img").className = "rotated-card"
+            document.getElementById(card.cardId+"-img-wrp").classList.add("rotated-card");
+                
         } else {
-            document.getElementById(card.cardId+"-img").className = "";
+            document.getElementById(card.cardId+"-img-wrp").classList.remove("rotated-card");;
         }
+        
     }
     rotateIconWrp.appendChild(rotateCheckbox);
     
@@ -92,10 +100,11 @@ class Card {
     mirrorCheckbox.name=card.cardId + "ismirrorred";
     mirrorCheckbox.onchange = () => {
         //alert(rotateCheckbox.checked)
+        card.mirror(mirrorCheckbox.checked);
         if (mirrorCheckbox.checked) {
-            document.getElementById(card.cardId+"-img").className = "mirrorred-card"
+            document.getElementById(card.cardId+"-img").classList.add("mirrorred-card")
         } else {
-            document.getElementById(card.cardId+"-img").className = "";
+            document.getElementById(card.cardId+"-img").classList.remove("mirrorred-card");
         }
     }
     mirrorIconWrp.appendChild(mirrorIcon);
@@ -107,10 +116,14 @@ class Card {
     let newCardHTML = document.createElement("div");
     newCardHTML.className="card test-card third-card";
     
+    let cardImgWrp = document.createElement("div");//оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
+    cardImgWrp.id=card.cardId+"-img-wrp";
+    cardImgWrp.className="card-img-wrp"
     let cardImg = document.createElement("img");
     cardImg.src = "./img/king.png";
-    cardImg.id=card.cardId +"-img"
-    newCardHTML.appendChild(cardImg);
+    cardImg.id=card.cardId +"-img";
+    cardImgWrp.appendChild(cardImg)
+    newCardHTML.appendChild(cardImgWrp);
     newCardHTML.appendChild(newCardControls);
     return newCardHTML;
   }
