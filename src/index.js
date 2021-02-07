@@ -14,6 +14,7 @@ class Card {
       this.zIndex = 500;
       this.top = "50px";
       this.left = "50px";
+      this.isOpen = true;
     }
     rotate(isRotated=false){
         this.isRotated=isRotated
@@ -45,6 +46,15 @@ class Card {
     //     </div>
     // </div>
     // </div>
+    let cardImgWrp = document.createElement("div");//оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
+    cardImgWrp.id=card.cardId+"-img-wrp";
+    cardImgWrp.className="card-img-wrp"
+    let cardImg = document.createElement("img");
+    cardImg.src = "./img/king.png";
+    cardImg.id=card.cardId +"-img";
+    cardImgWrp.appendChild(cardImg)
+    
+    
     let newCardControls = document.createElement("div");
     newCardControls.className ="card-controls-wrp card-controls";
     
@@ -168,6 +178,37 @@ class Card {
     mirrorIconWrp.appendChild(mirrorIcon);
     mirrorIconWrp.appendChild(mirrorCheckbox);
     newCardControls.appendChild(mirrorIconWrp);
+    
+    let openIconWrp = document.createElement("div");
+    openIconWrp.className="card-open-btn";
+    let openIcon = document.createElement("div");
+    openIcon.className="icon card-icon";
+    openIcon.setAttribute("data-icon","l");
+    //openIcon.onclick = () => alert("MIRROR " + card.cardId);
+    let openCheckbox = document.createElement("input");
+    openCheckbox.type = "checkbox";
+    openCheckbox.className = "card-open-checkbox";
+    openCheckbox.id=card.cardId + "isopen";
+    openCheckbox.name=card.cardId + "isopen";
+    openCheckbox.checked=card.isOpen;//приводим в соответствие вид карты и содержимое объекта
+    //if будет методом класса по сокрытию карты
+    if (openCheckbox.checked) {
+        cardImg.classList.remove("hidden-card")
+    } else {
+        cardImg.classList.add("hidden-card");
+    }
+    openCheckbox.onchange = () => {
+        //alert(openCheckbox.checked)
+        card.isOpen = openCheckbox.checked;
+        if (openCheckbox.checked) {
+            document.getElementById(card.cardId+"-img").classList.remove("hidden-card")
+        } else {
+            document.getElementById(card.cardId+"-img").classList.add("hidden-card");
+        }
+    }
+    openIconWrp.appendChild(openIcon);
+    openIconWrp.appendChild(openCheckbox);
+    newCardControls.appendChild(openIconWrp);
 
    // rotateIconWrp.appendChild(rotateIcon);
 
@@ -180,13 +221,6 @@ class Card {
     newCardHTML.style.top=card.top;
     newCardHTML.style.left=card.left;
 
-    let cardImgWrp = document.createElement("div");//оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
-    cardImgWrp.id=card.cardId+"-img-wrp";
-    cardImgWrp.className="card-img-wrp"
-    let cardImg = document.createElement("img");
-    cardImg.src = "./img/king.png";
-    cardImg.id=card.cardId +"-img";
-    cardImgWrp.appendChild(cardImg)
     newCardHTML.appendChild(cardImgWrp);
     newCardHTML.appendChild(newCardControls);
 //drag&grop
