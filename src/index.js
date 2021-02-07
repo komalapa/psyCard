@@ -44,6 +44,7 @@ class Card {
     let newCardControls = document.createElement("div");
     newCardControls.className ="card-controls-wrp card-controls";
     
+    
     let rotateIconWrp = document.createElement("div");
     rotateIconWrp.className="card-rotate-btn";
 
@@ -58,6 +59,7 @@ class Card {
     rotateCheckbox.className = "card-rotate-checkbox";
     rotateCheckbox.id=card.cardId + "isrotated";
     rotateCheckbox.name=card.cardId + "isrotated";
+    //rotateCheckbox.onmousedown =null;
     rotateCheckbox.onchange = () => {
         card.rotate(rotateCheckbox.checked)
         if (rotateCheckbox.checked) {
@@ -135,6 +137,51 @@ class Card {
     cardImgWrp.appendChild(cardImg)
     newCardHTML.appendChild(cardImgWrp);
     newCardHTML.appendChild(newCardControls);
+//drag&grop
+newCardControls.onmousedown=function(event){event.stopPropagation();}//Запрет drag&drop на меню
+
+newCardHTML.ondragstart = function() {
+    return false;
+  };
+newCardHTML.onmousedown = function(event) { // (1) отследить нажатие
+    //event.stopPropagation();
+    // (2) подготовить к перемещению:
+    // разместить поверх остального содержимого и в абсолютных координатах
+    newCardHTML.style.position = 'absolute';
+    //newCardHTML.style.zIndex = 1000;
+    // переместим в body, чтобы мяч был точно не внутри position:relative
+   // document.body.append(newCardHTML);
+    // и установим абсолютно спозиционированный мяч под курсор
+  
+    moveAt(event.pageX, event.pageY);
+  
+    // передвинуть мяч под координаты курсора
+    // и сдвинуть на половину ширины/высоты для центрирования
+    function moveAt(pageX, pageY) {
+        newCardHTML.style.left = pageX - newCardHTML.offsetWidth / 2 + 'px';
+        newCardHTML.style.top = pageY - newCardHTML.offsetHeight / 2 + 'px';
+    }
+  
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+    }
+  
+    // (3) перемещать по экрану
+    document.addEventListener('mousemove', onMouseMove);
+  
+    // (4) положить мяч, удалить более ненужные обработчики событий
+    newCardHTML.onmouseup = function() {
+      document.removeEventListener('mousemove', onMouseMove);
+      newCardHTML.onmouseup = null;
+    };
+  
+  };
+
+
+
+
+
+//END drag&grop
     return newCardHTML;
   }
   let field = document.getElementById("field");
@@ -142,3 +189,7 @@ class Card {
   let newCard=createCard(card)
   field.appendChild(newCard);
   card.isOnField=true;
+  let card2 = new Card  ("emotion", "2", "170px", "120px");
+  let newCard2=createCard(card2)
+  field.appendChild(newCard2);
+  card2.isOnField=true;

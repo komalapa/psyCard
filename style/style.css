@@ -183,6 +183,7 @@ body {
     box-sizing: border-box;
     display:flex;
     flex-wrap: wrap;
+    position: relative;
 }
 
 /* .card {
@@ -193,7 +194,9 @@ body {
     display: flex;
     flex-wrap: wrap;
 } */
-
+.field .card{
+    position: absolute;
+}
 .card {
     width: 120px;
     height: 170px;
@@ -225,7 +228,7 @@ body {
     transform: scaleX(1);
     transition: transform 0.3s;
 }
-.copy-card .card-position-controls-wrp {
+/* .copy-card .card-position-controls-wrp {
     display: flex;
     width: 100%;
     flex-direction: row-reverse;
@@ -264,10 +267,10 @@ body {
 
 .copy-card:hover .card-controls {
     display: flex;
-}
+} */
 
 /* other card control */
-.other-card {
+/* .other-card {
     resize: both;
     overflow: hidden;
     flex-direction: column;
@@ -318,7 +321,7 @@ body {
 .other-card .card-icon-rotate:hover{
     transform: rotate(360deg);
     transition: transform 0.5s;
-}
+} */
 
 /* end other card control */
 
