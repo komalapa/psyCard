@@ -10,6 +10,10 @@ class Card {
       this.isOnField = false; //false - карта в колоде, не вынесена на поле
       this.isOpen = false; //false - рубашкой вверх
       this.coordinates = {"x":"30px", "y":"30px", "z":1} // x,y координаты для абсолютного позиционирования, z - z-индекс
+      this.scale = 1;
+      this.zIndex = 500;
+      this.top = "50px";
+      this.left = "50px";
     }
     rotate(isRotated=false){
         this.isRotated=isRotated
@@ -87,14 +91,58 @@ class Card {
     let downIcon = document.createElement("div");
     downIcon.className="icon card-icon";
     downIcon.setAttribute("data-icon","h");
-    downIcon.onclick = () => alert("DOWN " + card.cardId)
+    downIcon.onclick = () => {
+        //alert("DOWN " + card.cardId);
+        if (card.zIndex>1){ 
+            card.zIndex--;
+            newCardHTML.style.zIndex=card.zIndex;
+        } else {
+            alert("Карта на нижнем слое");
+        }
+    }
     newCardControls.appendChild(downIcon);
 
     let upIcon = document.createElement("div");
     upIcon.className="icon card-icon";
     upIcon.setAttribute("data-icon","i");
-    upIcon.onclick = () => alert("UP " + card.cardId)
+    upIcon.onclick = () => {
+        //alert("UP " + card.cardId);
+        if (card.zIndex<1000){ 
+            card.zIndex++;
+            newCardHTML.style.zIndex=card.zIndex;
+        } else {
+            alert("Карта очень высоко");
+        }
+    }
     newCardControls.appendChild(upIcon);
+
+    let scaleUpIcon = document.createElement("div");
+    scaleUpIcon.className="icon card-icon";
+    scaleUpIcon.setAttribute("data-icon","v");
+    scaleUpIcon.onclick = () => {
+        //alert("ScaleUP " + card.cardId);
+        //card.scale=((card.scale+0.2)<5)?card.scale+0.2:card.scale;
+        //newCardHTML.style=`transform: scale(${card.scale})`;
+        if ((card.scale+0.2)<5){
+            card.scale+=0.2;
+            newCardHTML.style.transform= `scale(${card.scale})`;
+        }
+    }
+    newCardControls.appendChild(scaleUpIcon);
+
+    let scaleDownIcon = document.createElement("div");
+    scaleDownIcon.className="icon card-icon";
+    scaleDownIcon.setAttribute("data-icon","u");
+    scaleDownIcon.onclick = () => {
+        //alert("ScaleDown " + card.cardId);
+        //card.scale=((card.scale-0.2)>0)?card.scale-0.2:card.scale;
+        //newCardHTML.style=`transform: scale(${card.scale})`;
+        if ((card.scale-0.2)>0.5){
+            card.scale-=0.2;
+            newCardHTML.style.transform= `scale(${card.scale})`;
+        }
+    }
+    newCardControls.appendChild(scaleDownIcon);
 
     let mirrorIconWrp = document.createElement("div");
     mirrorIconWrp.className="card-mirror-btn";
@@ -126,8 +174,12 @@ class Card {
     let newCardHTML = document.createElement("div");
     newCardHTML.className="card test-card third-card";
     newCardHTML.id=card.cardId;
-    
-    
+    newCardHTML.style=`transform: scale(${card.scale})`;
+    newCardHTML.style.zIndex = card.zIndex;
+    newCardHTML.style.position="absolute";
+    newCardHTML.style.top=card.top;
+    newCardHTML.style.left=card.left;
+
     let cardImgWrp = document.createElement("div");//оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
     cardImgWrp.id=card.cardId+"-img-wrp";
     cardImgWrp.className="card-img-wrp"
@@ -144,21 +196,12 @@ newCardHTML.ondragstart = function() {
     return false;
   };
 newCardHTML.onmousedown = function(event) { // (1) отследить нажатие
-    //event.stopPropagation();
-    // (2) подготовить к перемещению:
-    // разместить поверх остального содержимого и в абсолютных координатах
-    newCardHTML.style.position = 'absolute';
-    //newCardHTML.style.zIndex = 1000;
-    // переместим в body, чтобы мяч был точно не внутри position:relative
-   // document.body.append(newCardHTML);
-    // и установим абсолютно спозиционированный мяч под курсор
-  
+    newCardHTML.style.zIndex = 1100;
     moveAt(event.pageX, event.pageY);
   
-    // передвинуть мяч под координаты курсора
-    // и сдвинуть на половину ширины/высоты для центрирования
     function moveAt(pageX, pageY) {
         newCardHTML.style.left = pageX - newCardHTML.offsetWidth / 2 + 'px';
+        
         newCardHTML.style.top = pageY - newCardHTML.offsetHeight / 2 + 'px';
     }
   
@@ -166,20 +209,15 @@ newCardHTML.onmousedown = function(event) { // (1) отследить нажат
       moveAt(event.pageX, event.pageY);
     }
   
-    // (3) перемещать по экрану
     document.addEventListener('mousemove', onMouseMove);
   
-    // (4) положить мяч, удалить более ненужные обработчики событий
     newCardHTML.onmouseup = function() {
       document.removeEventListener('mousemove', onMouseMove);
       newCardHTML.onmouseup = null;
+      newCardHTML.style.zIndex = card.zIndex;
     };
   
   };
-
-
-
-
 
 //END drag&grop
     return newCardHTML;

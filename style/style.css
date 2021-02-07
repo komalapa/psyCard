@@ -11,6 +11,7 @@ body {
     width: 100%;
     background-color: #fff;
     position: absolute;
+    z-index: 1500;/*карты не выходят за 1100*/
     top: -35px;
     transition: top 0.5s;
     border-bottom: 4px solid lightgrey;
@@ -67,7 +68,9 @@ body {
 .field {
     height: 100%;
     width: 100%;
+    padding: 20px;
     box-sizing: border-box;
+    position: relative;
 }
 
 .test-card {
@@ -84,7 +87,7 @@ body {
     bottom: 35px;
     left: 10px;
 
-    z-index: 1;
+    z-index: 1500;
 
     -webkit-user-select: none;
     user-select: none;
@@ -106,7 +109,7 @@ body {
     cursor: pointer;
 
     opacity: 0;
-    z-index: 2;
+    z-index: 1500;
 
     -webkit-touch-callout: none;
 }
@@ -177,14 +180,7 @@ body {
     transform: none;
 }
 
-.field {
-    padding: 20px;
-    height: 100%;
-    box-sizing: border-box;
-    display:flex;
-    flex-wrap: wrap;
-    position: relative;
-}
+
 
 /* .card {
     width: 60px;
@@ -352,6 +348,9 @@ body {
     justify-content: center;
     flex-direction: column;
     display: none;
+}
+.card:hover{
+    z-index: 1001 !important;
 }
 .third-card:hover .card-controls-wrp {
     display: flex;
