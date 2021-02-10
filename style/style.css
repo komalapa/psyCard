@@ -73,9 +73,6 @@ body {
     position: relative;
 }
 
-.test-card {
-    margin: 30px;
-}
 
 /*https://codepen.io/erikterwan/pen/EVzeRP */
 /* Made by Erik Terwan
@@ -166,13 +163,10 @@ body {
     padding: 10px;
     box-sizing: border-box;
     background: #ededed;
-
     -webkit-font-smoothing: antialiased;
     /* to stop flickering of text in safari */
-
     transform-origin: 0% 0%;
     transform: translate(-100%, 0);
-
     transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
 }
 
@@ -180,16 +174,6 @@ body {
     transform: none;
 }
 
-
-
-/* .card {
-    width: 60px;
-    height: 85px;
-    border: 2px solid black;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-} */
 .field .card{
     position: absolute;
 }
@@ -204,6 +188,7 @@ body {
     background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
     position: relative;
     visibility: visible;
+    overflow: hidden;
 }
 .card .mirrorred-card{
     transform: scaleX(-1);
@@ -229,109 +214,8 @@ body {
     transform: scaleX(1);
     transition: transform 0.3s;
 }
-/* .copy-card .card-position-controls-wrp {
-    display: flex;
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-}
 
-.copy-card .card-controls-left-wrp {
-    display: flex;
-    flex-direction: column;
-    margin-left: -18px;
-    padding: 0 5px;
-}
-
-.copy-card .card-icon {
-    font-size: 10px;
-    color: gray;
-}
-
-.copy-card .card-icon:hover {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.copy-card .card-resize {
-    margin-top: -9px;
-    margin-right: -9px;
-}
-
-.copy-card .card-rotate {
-    margin-top: -8px;
-    margin-left: -12px;
-}
-
-.copy-card .card-controls {
-    display: none;
-}
-
-.copy-card:hover .card-controls {
-    display: flex;
-} */
-
-/* other card control */
-/* .other-card {
-    resize: both;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.other-card .card-position-controls-wrp {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-}
-
-.other-card .card-controls-left-wrp {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 5px;
-}
-
-.other-card .card-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 17px;
-    height: 17px;
-    margin: 1px;
-    font-size: 12px;
-    color: black;
-    opacity: 0.5;
-    border-radius: 50%;
-    background-color: #fff;
-}
-
-.other-card .card-icon:hover {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-}
-
-.other-card .card-resize {
-    display: none;
-}
-
-.other-card .card-controls {
-    display: none;
-}
-
-.other-card:hover .card-controls {
-    display: flex;
-}
-.other-card .card-icon-rotate:hover{
-    transform: rotate(360deg);
-    transition: transform 0.5s;
-} */
-
-/* end other card control */
-
-/*3rd card*/
-.third-card {
-    resize: both;
-    overflow: hidden;
-}
-.third-card .card-icon {
+.card .card-icon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -345,11 +229,10 @@ body {
     background-color: #fff;
     transition: opacity 0.2s;
 }
-.third-card .card-icon:hover {
-    opacity: 0.7;  
+.card .card-icon:hover, .card-checkbox-btn:hover .card-icon {
+    opacity: 0.9;  
 }
-.third-card .card-controls-wrp {
-    /* display: flex; */
+.card .card-controls-wrp {
     justify-content: center;
     flex-direction: column;
     display: none;
@@ -357,13 +240,14 @@ body {
 .card:hover{
     z-index: 1001 !important;
 }
-.third-card:hover .card-controls-wrp {
+.card:hover .card-controls-wrp {
     display: flex;
 }
-.card-rotate-btn{
+
+.card-checkbox-btn{
     position: relative;
 }
-.card-rotate-btn .card-rotate-checkbox{
+.card-checkbox-btn .card-checkbox{
     position:absolute;
     width: 15px;
     height: 15px;
@@ -371,44 +255,16 @@ body {
     left: -2px;
     opacity: 0;
 }
+.card-checkbox-btn:hover .card-icon{
+    transition: transform 0.5s;
+}
+
 .card-rotate-btn:hover .card-icon{
     transform: rotate(360deg);
-    transition: transform 0.5s;
-    opacity: 0.7;
-}
-.card-mirror-btn{
-    position: relative;
-}
-.card-mirror-btn .card-mirror-checkbox{
-    position:absolute;
-    width: 15px;
-    height: 15px;
-    top: -1px;
-    left: -2px;
-    opacity: 0;
 }
 .card-mirror-btn:hover .card-icon{
     transform: scaleX(-1);
-    transition: transform 0.5s;
-    opacity: 0.7;
 }
-.card-open-btn{
-    position: relative;
-}
-.card-open-btn .card-open-checkbox{
-    position:absolute;
-    width: 15px;
-    height: 15px;
-    top: -1px;
-    left: -2px;
-    opacity: 0;
-}
-.card-open-btn:hover .card-icon{
-    transform: scaleX(-1);
-    transition: transform 0.5s;
-    opacity: 0.7;
-}
-/* end3rd card*/
 
 #deck-view-tray .card-controls {
     display: none
@@ -424,8 +280,6 @@ body {
     display: flex;
     height: 170px;
     min-width: 120px;
-    background: rgb(95, 158, 160);
-    background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
 }
 
 .deck-action {
