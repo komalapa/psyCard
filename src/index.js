@@ -1,9 +1,15 @@
-//console.log(document.getElementsByClassName("card"))
-const FIELD_ID = "field"
-
+const FIELD_ID = "field";
+const DECKS = [];//массив колод в комнате
+let selectedDeck = 0;
+//import('./card').then (module => {Card})
+//import {Deck} from './deck'
+//=================================================================================//
+//                                  Карта                                          //
+//=================================================================================//
 class Card {
-    constructor(deckId = "emotion", number="1",  height="170px", width="120px") {
+    constructor(deckId = "emotion", number="1", img="./img/king.png", height="170px", width="120px", scale=1) {
       this.fieldId = FIELD_ID;
+      this.deckId = deckId;
       this.cardId = deckId + '-'+number;
       this.height = height;
       this.width = width;
@@ -11,11 +17,11 @@ class Card {
       this.isMirrorred = false; //false - карта не отражена по вертикальной оси
       this.isOnField = false; //false - карта в колоде, не вынесена на поле
       this.isOpen = false; //false - рубашкой вверх
-      this.scale = 1;
+      this.scale = scale;
       this.zIndex = 500;
       this.top = "50px";
       this.left = "50px";
-      this.isOpen = true;
+      this.cardImg = img;
     }
     setCoord(top,left){
         this.top = top;
@@ -27,7 +33,7 @@ class Card {
         cardImgWrp.className="card-img-wrp"
         
         let cardImg = document.createElement("img");
-        cardImg.src = "./img/king.png";
+        cardImg.src = this.cardImg;
         cardImg.id=this.cardId +"-img";
         cardImgWrp.appendChild(cardImg)
     
@@ -174,7 +180,7 @@ class Card {
         newCardHTML.id=this.cardId;
         newCardHTML.style=`transform: scale(${this.scale})`;
         newCardHTML.style.zIndex = this.zIndex;
-        newCardHTML.style.position="absolute";
+        //newCardHTML.style.position="absolute";
         newCardHTML.style.top=this.top;
         newCardHTML.style.left=this.left;
 
@@ -187,8 +193,16 @@ class Card {
         newCardHTML.ondragstart = function() {
             return false;
         };
+        const that=this;
         newCardHTML.onmousedown = function(event) { // (1) отследить нажатие
-            newCardHTML.style.zIndex = 1100;
+            //console.log(event)
+            newCardHTML.style.zIndex = 1600;
+            if (!that.isOnField){
+                that.zIndex=1600;
+                that.addToField(event.pageY - newCardHTML.offsetHeight / 2 + 'px',event.pageX - newCardHTML.offsetWidth / 2 + 'px')
+                newCardHTML.style.zIndex = 1600;
+            }
+            
             function moveAt(pageX, pageY) {
                 let left = pageX - newCardHTML.offsetWidth / 2 + 'px';
                 let top = pageY - newCardHTML.offsetHeight / 2 + 'px';
@@ -206,7 +220,8 @@ class Card {
                 setCoord(newCardHTML.style.top, newCardHTML.style.left);
                 document.removeEventListener('mousemove', onMouseMove);
                 newCardHTML.onmouseup = null;
-                newCardHTML.style.zIndex = this.zIndex;
+                //console.log(that.zIndex)
+                newCardHTML.style.zIndex = that.zIndex;
             };
     
         };
@@ -216,21 +231,158 @@ class Card {
     }
 
     addToField(top, left){
-        this.top = top? top : this.top;
-        this.left = top? left :this.left;
-        
-        let field = document.getElementById(this.fieldId);
-        field.appendChild(this.createCardHTML());
-        this.isOnField=true;
+        if (!this.isOnField){
+            this.top = top? top : this.top;
+            this.left = top? left :this.left;
+            
+            let field = document.getElementById(this.fieldId);
+            field.appendChild(this.createCardHTML());
+            this.isOnField=true;
+        }
+        DECKS.map(item => {
+            if (item.deckId == this.deckId && item.isShown){
+                item.emptyDeckBox();
+                item.showDeck()
+            }
+        })
     }
     deleteFromField(){
         document.getElementById(this.cardId).remove();
         this.isOnField=false;
+        //console.log(this)
+        DECKS.map(item => {
+            if (item.deckId == this.deckId && item.isShown){
+                item.emptyDeckBox();
+                item.showDeck()
+            }
+        })
+    }
+    open(isOpen){
+        this.isOpen = (typeof isOpen !== 'undefined')  ? !this.isOpen : isOpen;
+        document.getElementById(this.cardId + "-isopen").checked = this.isOpen;
+        if (this.isOpen) {
+            document.getElementById(this.cardId +"-img").classList.remove("hidden-card")
+        } else {
+            document.getElementById(this.cardId +"-img").classList.add("hidden-card");
+        }
+
     }
   }
+//=================================================================================//
+//                                  Колода                                         //
+//=================================================================================//
+class Deck {
+    constructor(deckId = "emotion", cardImgs,  height="170px", width="120px", scale = 1) {
+      this.fieldId = FIELD_ID;
+      this.deckId = deckId;
+      this.cardHeight = height;
+      this.CardWidth = width;
+      this.isShown = false;
+      this.isOpen = false; //false - рубашкой вверх
+      this.scale = 1;
+      //this.zIndex = 500;//Нужен ли стартовый для колоды?
+      this.cards = [];//Массив всех карт колоды
+      cardImgs.map((item,index)=>this.cards[index]= new Card (deckId, index, item, height, width, scale))
+      this.pushCardOnField=this.pushCardOnField.bind(this);
+      this.shuffle=this.shuffle.bind(this);
+      this.open=this.open.bind(this);
+    }
+    // genDeck(deckId,cardImgs, height="170px", width="120px", scale=1){
+        
+    //     cardImgs.map((item,index)=>this.cards[index]= new Card (deckId, index, item, height, width, scale))
+
+    // }
+    shuffle(){
+        this.cards.sort(() => Math.random() - 0.5);
+        this.emptyDeckBox();
+        this.showDeck()
+    }
+    open(){
+        //alert("open all cards in the deck")
+        
+        this.isOpen = !this.isOpen
+        this.cards.map(item => {if(!item.isOnField){item.open(this.isOpen)}})
+        //console.log(this.cards)
+        this.emptyDeckBox();
+        this.showDeck()
+    }
+    pushCardOnField(id=null, x="50px", y="50px"){
+       // alert("pop any card if id==null")//Если id указан (например по двойному клику) то конкретная карта на поле
+       // console.log(this)
+        if (typeof id == "number") {
+            this.cards[id].addToField()
+        }else{
+            const cardsInDeck = DECKS.filter(item => item.deckId == this.deckId)[0].cards.filter(item => !item.isOnField );
+            if (cardsInDeck.length < 1) {
+                alert("В колоде кончились карты");
+                return
+            }
+            id = Math.floor(Math.random()*(cardsInDeck.length))
+            //console.log(id)
+            cardsInDeck[id].addToField()
+        }
+    }
+    showDeck(){
+        const deckElement = document.getElementById("deck-box");
+        this.cards.map(item =>{
+            if (!item.isOnField){
+                deckElement.appendChild(item.createCardHTML());
+            }
+        })
+        this.isShown = true;
+    }
+    emptyDeckBox(){
+        const deckElement = document.getElementById("deck-box");
+        deckElement.innerHTML = '';
+        this.isShown = false;
+    }
+}
 
 
-  let card = new Card();
-  card.addToField()
-  let card2 = new Card  ("emotion", "2", "170px", "120px");
-  card2.addToField("200px","200px")
+
+
+
+
+//   let card = new Card();
+//   card.addToField()
+//   let card2 = new Card  ("emotion", "2", "./img/queen.png","170px", "120px");
+//   card2.addToField("200px","200px")
+//   let card3 = new Card  ("emotion", "3","./img/jack.png", "170px", "120px");
+//   card3.addToField("300px","300px")
+
+  const imgs = ["./img/king.png", "./img/queen.png","./img/jack.png","./img/king.png", "./img/queen.png","./img/jack.png"]
+//   let deck = new Deck("poker", imgs);
+// //   console.log(deck)
+// //   deck.shuffle()
+// //   console.log(deck)
+// //   deck.open()
+//     console.log(deck)
+//     deck.pushCardOnField(0)
+//     deck.pushCardOnField(1)
+//     deck.pushCardOnField(2)
+//     //deck.pushCardOnField()
+//     deck.showDeck()
+  DECKS.push(new Deck("poker", imgs));
+  DECKS[0].pushCardOnField(0);
+  //DECKS[0].pushCardOnField(1);
+  DECKS[0].showDeck()
+  DECKS[0].open()
+
+
+
+
+
+//=================================================================================//
+//                                  Кнопки                                         //
+//=================================================================================//
+//выброс карты
+const pushToFieldBtn = document.getElementById("deck-push-to-field-btn");
+pushToFieldBtn.onclick = DECKS[selectedDeck].pushCardOnField;
+//перемешивание текущей колоды
+const shuffleBtn = document.getElementById("deck-shuffle-btn");
+shuffleBtn.onclick = DECKS[selectedDeck].shuffle;
+//открытие текущей колоды
+const openCardsBtn = document.getElementById("deck-open-cards-bth");
+const openCardsCheckbox = document.getElementById("deck-control-open-cards");
+openCardsBtn.onclick = DECKS[selectedDeck].open;
+openCardsCheckbox.checked = DECKS[selectedDeck].isOpen;

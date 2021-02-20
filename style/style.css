@@ -238,7 +238,7 @@ body {
     display: none;
 }
 .card:hover{
-    z-index: 1001 !important;
+    z-index: 1001;
 }
 .card:hover .card-controls-wrp {
     display: flex;
@@ -295,14 +295,23 @@ body {
     box-sizing: border-box;
     width: 100%;
 }
-
-.deck-cards .card {
+#deck-box{
     position: relative;
-    z-index: 1;
+    z-index: 500;
+}
+
+#deck-box .card {
+    position: relative;
+    z-index: 500;
+    top:auto !important;
+    left: auto !important;
+    width: 120px !important;
+    height: 170px !important;
+    transform: scale(1) !important;
 }
 
 .deck-cards .card:hover {
-    z-index: 2;
+    z-index: 501;
 }
 
 .cards-overlap .card:not(:first-child) {
@@ -346,7 +355,7 @@ body {
     display: none;
 }
 
-.deck-control-show-cards-check:checked+span {
+.deck-control-show-cards-check:not(:checked)+span {
     display: block;
     width: 20px;
     height: 0px;
