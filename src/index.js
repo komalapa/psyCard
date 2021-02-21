@@ -200,28 +200,9 @@ class Card {
             if (!that.isOnField){
                 that.zIndex=1600;
                 that.addToField(event.pageY - newCardHTML.offsetHeight / 2 + 'px',event.pageX - newCardHTML.offsetWidth / 2 + 'px')
-                let pushedCard = document.getElementById(that.cardId)
-                function moveAt(pageX, pageY) {
-                    let left = pageX - pushedCard.offsetWidth / 2 + 'px';
-                    let top = pageY - pushedCard.offsetHeight / 2 + 'px';
-                    pushedCard.style.left = left;
-                    pushedCard.style.top = top;
-                }
-            
-                function onMouseMove(event) {
-                moveAt(event.pageX, event.pageY);
-                }
-            
-                document.addEventListener('mousemove', onMouseMove);
+                newCardHTML = document.getElementById(that.cardId)
                 
-                pushedCard.onmouseup = function() {
-                    setCoord(newCardHTML.style.top, newCardHTML.style.left);
-                    document.removeEventListener('mousemove', onMouseMove);
-                    pushedCard.onmouseup = null;
-                    newCardHTML.style.zIndex = that.zIndex;
-                };
-                
-            } else {
+            } 
             
             function moveAt(pageX, pageY) {
                 let left = pageX - newCardHTML.offsetWidth / 2 + 'px';
@@ -243,7 +224,7 @@ class Card {
                 //console.log(that.zIndex)
                 newCardHTML.style.zIndex = that.zIndex;
             };
-        }
+        
         };
 
     //END drag&grop
