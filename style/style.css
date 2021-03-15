@@ -233,8 +233,10 @@ body {
     opacity: 0.9;  
 }
 .card .card-controls-wrp {
+    height: 100%;
     justify-content: center;
     flex-direction: column;
+    flex-wrap: wrap;
     display: none;
 }
 .card:hover{
@@ -290,6 +292,7 @@ body {
 
 .deck-cards {
     display: flex;
+    align-items: center;
     overflow: scroll;
     padding: 20px;
     box-sizing: border-box;
@@ -308,6 +311,9 @@ body {
     width: 120px !important;
     height: 170px !important;
     transform: scale(1) !important;
+}
+#deck-box .card-horizontal{
+    width: 240px !important;
 }
 
 .deck-cards .card:hover {
@@ -379,6 +385,31 @@ body {
 .deck-control-icon:hover,
 .deck-control-show-cards:hover {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.deck-selector-list{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 120px;
+    height: 170px;
+    list-style:none;
+    padding: 0;
+    border: 2px solid gray;
+    border-radius: 10px;   
+}
+.deck-selector-list li{
+    display: block;
+    width:35%;
+    height: 35%;
+    background: rgb(95, 158, 160);
+    background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
+    border-radius: 3px;
+    border: 2px solid black;
+}
+.deck-selector-list li:hover{
+    border-color:lightblue
 }
 
 .deck-selector-controls {
