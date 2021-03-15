@@ -701,6 +701,20 @@ openCardsBtn.onclick =() =>{
      DECKS[selectedDeck].open();
     }
 openCardsCheckbox.checked = DECKS[selectedDeck].isOpen;
+//Вид колоды
+const cardsViewBtn = document.getElementById("deck-cards-view-bth");
+const cardsViewCheckbox = document.getElementById("deck-control-cards-view");
+cardsViewBtn.onclick = () =>{
+    const deckBox= document.getElementById("deck-box");
+    if (cardsViewCheckbox.checked){
+        deckBox.classList.remove("cards-split")
+        deckBox.classList.add("cards-overlap");
+    } else {
+        deckBox.classList.remove("cards-overlap")
+        deckBox.classList.add("cards-split");
+    }
+}
+
 //следующая колода
 const nextDeckBtn = document.getElementById("next-deck-btn");
 nextDeckBtn.onclick = () =>{

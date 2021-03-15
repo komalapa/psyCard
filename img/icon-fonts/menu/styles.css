@@ -98,3 +98,6 @@
 .icon-search-plus:before {
   content: "\76";
 }
+.icon-clone:before {
+  content: "\73";
+}
