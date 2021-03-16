@@ -221,7 +221,7 @@ class Card {
             function onMouseMove(event) {
             moveAt(event.pageX, event.pageY);
             }
-        
+            
             document.addEventListener('mousemove', onMouseMove);
             
             newCardHTML.onmouseup = function() {
@@ -231,7 +231,13 @@ class Card {
                 //console.log(that.zIndex)
                 newCardHTML.style.zIndex = that.zIndex;
             };
-        
+            newCardHTML.onmousedown = function() { //для подвисшей карты возможность бросить по клику
+                setCoord(newCardHTML.style.top, newCardHTML.style.left);
+                document.removeEventListener('mousemove', onMouseMove);
+                newCardHTML.onmouseup = null;
+                //console.log(that.zIndex)
+                newCardHTML.style.zIndex = that.zIndex;
+            };
         };
 
     //END drag&grop
@@ -386,7 +392,7 @@ shuffleBtn.onclick = () =>{
 const openCardsBtn = document.getElementById("deck-open-cards-bth");
 const openCardsCheckbox = document.getElementById("deck-control-open-cards");
 openCardsBtn.onclick =() =>{
-    console.log("open deck")
+    //console.log("open deck")
      DECKS[selectedDeck].open();
     }
 openCardsCheckbox.checked = DECKS[selectedDeck].isOpen;
@@ -407,9 +413,9 @@ cardsViewBtn.onclick = () =>{
 //следующая колода
 const nextDeckBtn = document.getElementById("next-deck-btn");
 nextDeckBtn.onclick = () =>{
-    console.log(selectedDeck, DECKS.length, (selectedDeck >= DECKS.length -1 ))
+   // console.log(selectedDeck, DECKS.length, (selectedDeck >= DECKS.length -1 ))
     selectedDeck = (selectedDeck >= DECKS.length -1 ) ? 0 : ++selectedDeck;
-    console.log(selectedDeck)
+    //console.log(selectedDeck)
     DECKS[selectedDeck].emptyDeckBox();
     DECKS[selectedDeck].showDeck();
 }
@@ -417,7 +423,7 @@ nextDeckBtn.onclick = () =>{
 const prevDeckBtn = document.getElementById("prev-deck-btn");
 prevDeckBtn.onclick = () =>{
     selectedDeck = (selectedDeck==0)? DECKS.length - 1 : --selectedDeck;
-    console.log(selectedDeck)
+    //console.log(selectedDeck)
     DECKS[selectedDeck].emptyDeckBox();
     DECKS[selectedDeck].showDeck();
 }
