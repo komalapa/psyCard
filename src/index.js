@@ -340,6 +340,7 @@ class Deck {
             }
         })
         this.isShown = true;
+        document.getElementById("deck-control-open-cards").checked = this.isOpen;
     }
     emptyDeckBox(){
         const deckElement = document.getElementById("deck-box");
