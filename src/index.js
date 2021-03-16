@@ -53,8 +53,8 @@ class Card {
         let rotateCheckbox = document.createElement("input");
         rotateCheckbox.type = "checkbox";
         rotateCheckbox.className = "card-checkbox card-rotate-checkbox";
-        rotateCheckbox.id=this.cardId + "isrotated";
-        rotateCheckbox.name=this.cardId + "isrotated";
+        rotateCheckbox.id=this.cardId + "-isrotated";
+        rotateCheckbox.name=this.cardId + "-isrotated";
         rotateCheckbox.onchange = () => {
             this.isRotated=rotateCheckbox.checked;
             if (rotateCheckbox.checked) {
@@ -132,8 +132,8 @@ class Card {
         let mirrorCheckbox = document.createElement("input");
         mirrorCheckbox.type = "checkbox";
         mirrorCheckbox.className = "card-checkbox card-mirror-checkbox";
-        mirrorCheckbox.id=this.cardId + "ismirrorred";
-        mirrorCheckbox.name=this.cardId + "ismirrorred";
+        mirrorCheckbox.id=this.cardId + "-ismirrorred";
+        mirrorCheckbox.name=this.cardId + "-ismirrorred";
         mirrorCheckbox.onchange = () => {
             this.isMirrorred = mirrorCheckbox.checked;
             if (mirrorCheckbox.checked) {
