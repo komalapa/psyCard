@@ -389,11 +389,13 @@ DECKS[selectedDeck].open()
 //=================================================================================//
 //выброс карты
 const pushToFieldBtn = document.getElementById("deck-push-to-field-btn");
-pushToFieldBtn.onclick = DECKS[selectedDeck].pushCardOnField;
+pushToFieldBtn.onclick = () =>{
+    DECKS[selectedDeck].pushCardOnField()
+};
 //перемешивание текущей колоды
 const shuffleBtn = document.getElementById("deck-shuffle-btn");
 shuffleBtn.onclick = () => {
-    DECKS[selectedDeck].shuffle;
+    DECKS[selectedDeck].shuffle();
 }
 //открытие текущей колоды
 const openCardsBtn = document.getElementById("deck-open-cards-bth");
