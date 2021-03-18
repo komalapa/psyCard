@@ -320,9 +320,13 @@ body {
     z-index: 501;
 }
 
+.cards-overlap .card.card-horizontal:not(:first-child) {
+    margin-left: -180px;
+}
 .cards-overlap .card:not(:first-child) {
     margin-left: -90px;
 }
+
 
 .cards-split .card:not(:first-child) {
     margin-left: 10px;
