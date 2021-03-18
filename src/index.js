@@ -363,6 +363,13 @@ const genDeckSelectorMenu = () =>{
                 let newAvailableDeck = document.createElement("li");
                 newAvailableDeck.id = "available-deck-"+i;
                 newAvailableDeck.title = DECKS[i].name;
+                if (document.getElementById("available-deck-"+selectedDeck)){
+                    document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+                }
+                newAvailableDeck.classList.add("selected-deck")
+                selectedDeck = i;
+                DECKS[selectedDeck].emptyDeckBox();
+                DECKS[selectedDeck].showDeck()
                 newAvailableDeck.onclick = () =>{
                     if (document.getElementById("available-deck-"+selectedDeck)){
                         document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
