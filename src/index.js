@@ -1,8 +1,7 @@
 const FIELD_ID = "field";
 const DECKS = []; //массив колод в комнате
 let selectedDeck = 0;
-//import('./card').then (module => {Card})
-//import {Deck} from './deck'
+
 //=================================================================================//
 //                                  Карта                                          //
 //=================================================================================//
@@ -70,10 +69,7 @@ class Card {
         deleteIcon.className = "icon card-icon";
         deleteIcon.setAttribute("data-icon", "g");
         deleteIcon.onclick = () => this.deleteFromField();
-        // {
-        // document.getElementById(this.cardId).remove();
-        // this.isOnField=false
-        // }
+        
         newCardControls.appendChild(deleteIcon);
 
         let downIcon = document.createElement("div");
@@ -185,7 +181,6 @@ class Card {
 
         newCardHTML.style = `transform: scale(${this.scale})`;
         newCardHTML.style.zIndex = this.zIndex;
-        //newCardHTML.style.position="absolute";
         newCardHTML.style.top = this.top;
         newCardHTML.style.left = this.left;
         newCardHTML.style.width = this.width;
@@ -204,16 +199,15 @@ class Card {
         };
         const that = this;
         newCardHTML.onmousedown = function (event) { // (1) отследить нажатие
-            console.log(newCardHTML.onmouseup)
+            
             if (newCardHTML.onmouseup) {//Если карта ждет события прекращаем все события на ней, значит был клик и событие mouseup не сработало
                 window.addEventListener(onmousemove, function (event) {
                     event.stopPropagation();
                 }, true);
             } else {
-                console.log(event)
+                //console.log(event)
                 newCardHTML.style.zIndex = 1600; //убирать карту под меню неудобно
                 if (!that.isOnField) {
-                    //that.zIndex=1600;
                     that.addToField(event.pageY - newCardHTML.offsetHeight / 2 + 'px', event.pageX - newCardHTML.offsetWidth / 2 + 'px')
                     newCardHTML = document.getElementById(that.cardId)
 
@@ -236,7 +230,6 @@ class Card {
                     setCoord(newCardHTML.style.top, newCardHTML.style.left);
                     document.removeEventListener('mousemove', onMouseMove);
                     newCardHTML.onmouseup = null;
-                    //console.log(that.zIndex)
                     newCardHTML.style.zIndex = that.zIndex;
                 };
             }
@@ -266,7 +259,6 @@ class Card {
     deleteFromField() {
         document.getElementById(this.cardId).remove();
         this.isOnField = false;
-        //console.log(this)
         DECKS.map(item => {
             if (item.deckId == this.deckId && item.isShown) {
                 item.emptyDeckBox();
@@ -275,7 +267,6 @@ class Card {
         })
     }
     open(isOpen) {
-        //console.log(this)
         this.isOpen = (typeof isOpen !== 'undefined') ? !this.isOpen : isOpen;
         document.getElementById(this.cardId + "-isopen").checked = this.isOpen;
         if (this.isOpen) {
@@ -298,40 +289,31 @@ class Deck {
         this.isShown = false;
         this.isOpen = false; //false - рубашкой вверх
         this.scale = 1;
-        //this.zIndex = 500;//Нужен ли стартовый для колоды?
         this.cards = []; //Массив всех карт колоды
         cardImgs.map((item, index) => this.cards[index] = new Card(deckId, index, item, height, width, scale, isHorizontal))
         this.pushCardOnField = this.pushCardOnField.bind(this);
         this.shuffle = this.shuffle.bind(this);
         this.open = this.open.bind(this);
-        this.isHorizontal = isHorizontal
+        this.isHorizontal = isHorizontal;
+        this.isAvaluable = false;//Для полного списка колод. Доступны в лотке будут только помеченные доступными в общем списке
     }
-    // genDeck(deckId,cardImgs, height="170px", width="120px", scale=1){
 
-    //     cardImgs.map((item,index)=>this.cards[index]= new Card (deckId, index, item, height, width, scale))
-
-    // }
     shuffle() {
         this.cards.sort(() => Math.random() - 0.5);
         this.emptyDeckBox();
         this.showDeck()
     }
     open() {
-        //alert("open all cards in the deck")
-
         this.isOpen = !this.isOpen
         this.cards.map(item => {
             if (!item.isOnField) {
                 item.open(this.isOpen)
             }
         })
-        //console.log(this.cards)
         this.emptyDeckBox();
         this.showDeck()
     }
     pushCardOnField(id = null, x = "50px", y = "50px") {
-        // alert("pop any card if id==null")//Если id указан (например по двойному клику) то конкретная карта на поле
-        // console.log(this)
         if (typeof id == "number") {
             this.cards[id].addToField()
         } else {
@@ -341,7 +323,6 @@ class Deck {
                 return
             }
             id = Math.floor(Math.random() * (cardsInDeck.length))
-            //console.log(id)
             cardsInDeck[id].addToField()
         }
     }
@@ -364,15 +345,6 @@ class Deck {
 
 
 
-
-
-
-//   let card = new Card();
-//   card.addToField()
-//   let card2 = new Card  ("emotion", "2", "./img/queen.png","170px", "120px");
-//   card2.addToField("200px","200px")
-//   let card3 = new Card  ("emotion", "3","./img/jack.png", "170px", "120px");
-//   card3.addToField("300px","300px")
 
 const imgs = ["./img/king.png", "./img/queen.png", "./img/jack.png", "./img/king.png", "./img/queen.png", "./img/jack.png"]
 DECKS.push(new Deck("poker", imgs));
@@ -401,7 +373,6 @@ shuffleBtn.onclick = () => {
 const openCardsBtn = document.getElementById("deck-open-cards-bth");
 const openCardsCheckbox = document.getElementById("deck-control-open-cards");
 openCardsBtn.onclick = () => {
-    //console.log("open deck")
     DECKS[selectedDeck].open();
 }
 openCardsCheckbox.checked = DECKS[selectedDeck].isOpen;
@@ -422,9 +393,7 @@ cardsViewBtn.onclick = () => {
 //следующая колода
 const nextDeckBtn = document.getElementById("next-deck-btn");
 nextDeckBtn.onclick = () => {
-    // console.log(selectedDeck, DECKS.length, (selectedDeck >= DECKS.length -1 ))
     selectedDeck = (selectedDeck >= DECKS.length - 1) ? 0 : ++selectedDeck;
-    //console.log(selectedDeck)
     DECKS[selectedDeck].emptyDeckBox();
     DECKS[selectedDeck].showDeck();
 }
@@ -432,7 +401,6 @@ nextDeckBtn.onclick = () => {
 const prevDeckBtn = document.getElementById("prev-deck-btn");
 prevDeckBtn.onclick = () => {
     selectedDeck = (selectedDeck == 0) ? DECKS.length - 1 : --selectedDeck;
-    //console.log(selectedDeck)
     DECKS[selectedDeck].emptyDeckBox();
     DECKS[selectedDeck].showDeck();
 }
