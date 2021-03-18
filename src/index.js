@@ -23,6 +23,17 @@ class Card {
         this.cardImg = img;
         this.isHorizontal = isHorizontal
     }
+    reset(){
+        
+        this.isRotated = false; //false - карта не перевернута на 180 градусов
+        this.isMirrorred = false; //false - карта не отражена по вертикальной оси
+        this.isOnField = false; //false - карта в колоде, не вынесена на поле
+        this.isOpen = DECKS.find(deck=>deck.deckId == this.deckId).isOpen; //false - рубашкой вверх
+        this.scale = DECKS.find(deck=>deck.deckId == this.deckId).scale;
+        this.zIndex = 500;
+        this.top = "50px";
+        this.left = "50px";
+    }
     setCoord(top, left) {
         this.top = top;
         this.left = left;
@@ -485,54 +496,14 @@ prevDeckBtn.onclick = () => {
         if (selectedDeck != oldSelectedDeck){
             DECKS[selectedDeck].emptyDeckBox();
             DECKS[selectedDeck].showDeck();
+            document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
+            document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
         }// else {
     //     alert ("Нет активных колод")
     // }
     }
 }
-// //Меню выбора колоды
-// const genDeckSelectorMenu = () =>{
-//     const deckSelector = document.getElementById("deck-select-menu");
-//     deckSelector.innerHTML='';
-//     for (let i=0; i<DECKS.length; i++){
-//         let menuItem = document.createElement("li");
-//         let menuItemLabel = document.createElement("label");
-//         menuItemLabel.innerText = DECKS[i].name;
-//         let menuItemCheckbox =  document.createElement("input");
-//         menuItemCheckbox.type="checkbox";
-//         menuItemCheckbox.name = DECKS[i].deckId;
-//         menuItemCheckbox.checked = DECKS[i].isAvaluable;
-//         menuItemCheckbox.onclick = () =>{
-//             DECKS[i].isAvaluable = menuItemCheckbox.checked;
-//             if (menuItemCheckbox.checked) {
-//                 let newAvailableDeck = document.createElement("li");
-//                 newAvailableDeck.id = "available-deck-"+i;
-//                 newAvailableDeck.title = DECKS[i].name;
-//                 newAvailableDeck.onclick = () =>{
-//                     if (document.getElementById("available-deck-"+selectedDeck)){
-//                         document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
-//                     }
-//                     selectedDeck = i;
-//                     DECKS[selectedDeck].emptyDeckBox();
-//                     DECKS[selectedDeck].showDeck();
-//                     document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
-//                 }
-//                 document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
-//             } else {
-//                 document.getElementById("available-deck-"+i).remove()
-//                 if (selectedDeck == i) {
-//                     DECKS[selectedDeck].emptyDeckBox();
-//                 }
-//             }
-//         }
 
-//         menuItemLabel.prepend(menuItemCheckbox);
-//         menuItem.appendChild(menuItemLabel);
-//         //console.log(menuItem)
-//         deckSelector.appendChild(menuItem)
-//     }
-// }
-//genDeckSelectorMenu()
 
 //=================================================================================//
 //                                  Кнопки меню                                    //
@@ -544,13 +515,17 @@ newFieldBtn.onclick = () =>{
         let onFieldElems = document.getElementById("field").childNodes
         onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
             if (e.classList && e.classList.contains("card")) {
-                console.log(e)
+                //console.log(e)
                 let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
-                console.log(cardDeck.cards[e.id.split("-")[1]])
-                cardDeck.cards[e.id.split("-")[1]].isOnField=false;
+                cardDeck.cards[e.id.split("-")[1]].reset();
             }
         })
         document.getElementById("field").innerHTML=''//очищаем поле
+        if (typeof(selectedDeck) == "number"){
+            DECKS[selectedDeck].emptyDeckBox();
+            document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+            selectedDeck = null;
+        }
         
         
     }
