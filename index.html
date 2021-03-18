@@ -47,13 +47,21 @@
 
                 <div id="deck-view-tray">
                     <div class="deck-action">
-                        <div data-icon="p" class="icon deck-control-icon"></div>
+                        <div class="dropdown-deck-select form-group">
+                            <label data-icon="p" class="icon deck-control-icon dropdown-deck-select-label-title"></label>
+                            <ul id="deck-select-menu">
+                              <li><label><input type="checkbox" name="type[]">A</label></li>
+                              <li><label><input type="checkbox" name="type[]">B</label></li>
+                              <li><label><input type="checkbox" name="type[]">C</label></li>
+                            </ul>
+                        </div>
+                        
                         <div class="deck-selector">
-                            <ul class="deck-selector-list">
+                            <ul class="deck-selector-list" id="available-decks-selector">
+                               <!-- <li></li>
                                <li></li>
                                <li></li>
-                               <li></li>
-                               <li></li> 
+                               <li></li>  -->
                             </ul>
                             <div class="deck-selector-controls">
                                 <div data-icon="q" class="icon deck-control-icon" id="prev-deck-btn"></div>

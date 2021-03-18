@@ -98,4 +98,5 @@ const imgsAnibiWords = [
     
 ]
 
-DECKS.push(new Deck("anibi-words", imgsAnibiWords));
+DECKS.push(new Deck("Аниби слова","anibi-words", imgsAnibiWords));
+genDeckSelectorMenu()

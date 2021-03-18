@@ -313,7 +313,7 @@ body {
     transform: scale(1) !important;
 }
 #deck-box .card-horizontal{
-    width: 240px !important;
+    min-width: 240px !important;
 }
 
 .deck-cards .card:hover {
@@ -411,8 +411,52 @@ body {
 .deck-selector-list li:hover{
     border-color:lightblue
 }
+.deck-selector-list  .selected-deck{
+    border-color: olive;
+}
+.selected-deck:after{
+    content:"\2714";
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    color: olive;
+}
 
 .deck-selector-controls {
     display: flex;
     justify-content: space-around;
 }
+
+/*dropdown deck selector (https://codepen.io/findtuts/pen/ZemoJG)*/
+.dropdown-deck-select{
+    position:relative;
+    display:inline-block;
+    height: 15px;;
+  }
+  
+  
+  .dropdown-deck-select ul{
+       position: absolute;
+      background: #cacaca;
+      list-style: none;
+      min-width: 180px;
+      margin: 0px;
+      padding:0px;
+      left:0px;
+        display:none;
+        z-index:1;
+      border: 1px solid #9c9c9c;
+  }
+  .dropdown-deck-select ul li{
+      font-size: 15px;
+      padding: 10px;
+      border-bottom: 1px solid #a5a5a5;
+      margin: 0px;
+  }
+  .dropdown-deck-select ul li input{
+    margin-right:10px;
+  }
+  
+  .dropdown-deck-select:hover ul{
+    display:block
+  }

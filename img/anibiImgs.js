@@ -97,4 +97,5 @@
       "./img/cards-imgs/Аниби картинки/Аниби картинки (96).jpg",
       
   ]
-  DECKS.push(new Deck("anibi", imgsAnibi));
+  DECKS.push(new Deck("Аниби","anibi", imgsAnibi));
+  genDeckSelectorMenu()
