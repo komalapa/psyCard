@@ -359,7 +359,7 @@ DECKS.push(new Deck("Покерная колода","poker", imgs));
 
 
 //=================================================================================//
-//                                  Кнопки                                         //
+//                                  Кнопки колоды                                  //
 //=================================================================================//
 //выброс карты
 const pushToFieldBtn = document.getElementById("deck-push-to-field-btn");
@@ -467,3 +467,42 @@ const genDeckSelectorMenu = () =>{
     }
 }
 genDeckSelectorMenu()
+
+//=================================================================================//
+//                                  Кнопки меню                                    //
+//=================================================================================//
+//new
+const newFieldBtn = document.getElementById("newFieldBtn");
+newFieldBtn.onclick = () =>{
+    if (confirm("Очистить поле? Восстановить расположение карт будет невозможно!")){
+        let onFieldElems = document.getElementById("field").childNodes
+        onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
+            if (e.classList && e.classList.contains("card")) {
+                console.log(e)
+                let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
+                console.log(cardDeck.cards[e.id.split("-")[1]])
+                cardDeck.cards[e.id.split("-")[1]].isOnField=false;
+            }
+        })
+        document.getElementById("field").innerHTML=''//очищаем поле
+        
+        
+    }
+}
+//open
+document.getElementById("openField").onclick =() => {
+    alert ("we need to load large json..")
+};
+//save
+document.getElementById("saveField").onclick =() => {
+    console.log (JSON.stringify(DECKS))
+    navigator.clipboard.writeText(JSON.stringify(DECKS))
+  .then(() => {
+    alert ("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл")
+  })
+  .catch(err => {
+    console.log('Something went wrong', err);
+  });
+};
+//link
+document.getElementById("linkToField").onclick =() => alert ("Сетевые функции пока не готовы");
