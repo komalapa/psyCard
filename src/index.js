@@ -1,6 +1,6 @@
 const FIELD_ID = "field";
 const DECKS = []; //массив колод в комнате
-let selectedDeck = 0;
+let selectedDeck = null;//0;
 
 //=================================================================================//
 //                                  Карта                                          //
@@ -363,7 +363,7 @@ const genDeckSelectorMenu = () =>{
                 let newAvailableDeck = document.createElement("li");
                 newAvailableDeck.id = "available-deck-"+i;
                 newAvailableDeck.title = DECKS[i].name;
-                if (document.getElementById("available-deck-"+selectedDeck)){
+                if (typeof(selectedDeck) == "number"){//(document.getElementById("available-deck-"+selectedDeck)){
                     document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
                 }
                 newAvailableDeck.classList.add("selected-deck")
@@ -371,7 +371,7 @@ const genDeckSelectorMenu = () =>{
                 DECKS[selectedDeck].emptyDeckBox();
                 DECKS[selectedDeck].showDeck()
                 newAvailableDeck.onclick = () =>{
-                    if (document.getElementById("available-deck-"+selectedDeck)){
+                    if (typeof(selectedDeck) == "number"){//(document.getElementById("available-deck-"+selectedDeck)){
                         document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
                     }
                     selectedDeck = i;
@@ -384,6 +384,7 @@ const genDeckSelectorMenu = () =>{
                 document.getElementById("available-deck-"+i).remove()
                 if (selectedDeck == i) {
                     DECKS[selectedDeck].emptyDeckBox();
+                    selectedDeck = null;
                 }
             }
         }
@@ -419,20 +420,26 @@ addDeck("Покерная колода","poker", imgsPoker);
 //выброс карты
 const pushToFieldBtn = document.getElementById("deck-push-to-field-btn");
 pushToFieldBtn.onclick = () =>{
-    DECKS[selectedDeck].pushCardOnField()
+    if (typeof(selectedDeck) == "number"){
+        DECKS[selectedDeck].pushCardOnField()
+    }
 };
 //перемешивание текущей колоды
 const shuffleBtn = document.getElementById("deck-shuffle-btn");
 shuffleBtn.onclick = () => {
-    DECKS[selectedDeck].shuffle();
+    if (typeof(selectedDeck) == "number"){
+        DECKS[selectedDeck].shuffle();
+    }
 }
 //открытие текущей колоды
 const openCardsBtn = document.getElementById("deck-open-cards-bth");
 const openCardsCheckbox = document.getElementById("deck-control-open-cards");
 openCardsBtn.onclick = () => {
-    DECKS[selectedDeck].open();
+    if (typeof(selectedDeck) == "number"){
+        DECKS[selectedDeck].open();
+    }
 }
-openCardsCheckbox.checked = DECKS[selectedDeck].isOpen;
+openCardsCheckbox.checked = selectedDeck? DECKS[selectedDeck].isOpen: false;
 //Вид колоды
 const cardsViewBtn = document.getElementById("deck-cards-view-bth");
 const cardsViewCheckbox = document.getElementById("deck-control-cards-view");
@@ -450,16 +457,18 @@ cardsViewBtn.onclick = () => {
 //следующая колода
 const nextDeckBtn = document.getElementById("next-deck-btn");
 nextDeckBtn.onclick = () => {
-    const oldSelectedDeck = selectedDeck;
-    selectedDeck = (selectedDeck >= DECKS.length - 1) ? 0 : ++selectedDeck;
-    while (!DECKS[selectedDeck].isAvaluable && selectedDeck!=oldSelectedDeck){
+    if (typeof(selectedDeck) == "number"){
+        const oldSelectedDeck = selectedDeck;
         selectedDeck = (selectedDeck >= DECKS.length - 1) ? 0 : ++selectedDeck;
-    }
-    if (selectedDeck != oldSelectedDeck){
-        DECKS[selectedDeck].emptyDeckBox();
-        DECKS[selectedDeck].showDeck();
-        document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
-        document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
+        while (!DECKS[selectedDeck].isAvaluable && selectedDeck!=oldSelectedDeck){
+            selectedDeck = (selectedDeck >= DECKS.length - 1) ? 0 : ++selectedDeck;
+        }
+        if (selectedDeck != oldSelectedDeck){
+            DECKS[selectedDeck].emptyDeckBox();
+            DECKS[selectedDeck].showDeck();
+            document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
+            document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
+        }
     } //else {
     //     alert ("Нет активных колод")
     // }
@@ -467,17 +476,19 @@ nextDeckBtn.onclick = () => {
 //предыдущая колода
 const prevDeckBtn = document.getElementById("prev-deck-btn");
 prevDeckBtn.onclick = () => {
-    const oldSelectedDeck = selectedDeck;
-    selectedDeck = (selectedDeck == 0) ? DECKS.length - 1 : --selectedDeck;
-    while (!DECKS[selectedDeck].isAvaluable && selectedDeck!=oldSelectedDeck){
+    if (typeof(selectedDeck) == "number"){
+        const oldSelectedDeck = selectedDeck;
         selectedDeck = (selectedDeck == 0) ? DECKS.length - 1 : --selectedDeck;
-    }
-    if (selectedDeck != oldSelectedDeck){
-        DECKS[selectedDeck].emptyDeckBox();
-        DECKS[selectedDeck].showDeck();
-    }// else {
+        while (!DECKS[selectedDeck].isAvaluable && selectedDeck!=oldSelectedDeck){
+            selectedDeck = (selectedDeck == 0) ? DECKS.length - 1 : --selectedDeck;
+        }
+        if (selectedDeck != oldSelectedDeck){
+            DECKS[selectedDeck].emptyDeckBox();
+            DECKS[selectedDeck].showDeck();
+        }// else {
     //     alert ("Нет активных колод")
     // }
+    }
 }
 // //Меню выбора колоды
 // const genDeckSelectorMenu = () =>{
