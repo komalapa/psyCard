@@ -491,18 +491,81 @@ newFieldBtn.onclick = () =>{
 }
 //open
 document.getElementById("openField").onclick =() => {
-    alert ("we need to load large json..")
+    //alert ("we need to load large json..");
+    let openForm = document.createElement("form");
+    openForm.id = "open-field-form";
+    openForm.style.position ="absolute";
+    openForm.style.width = "50%"
+    openForm.style.height = "50%"
+    let savedTextField = document.createElement("textarea"); 
+    savedTextField.style.width = "100%"
+    savedTextField.style.height = "100%"
+    savedTextField.placeholder = "Вставьте текст сохранения сюда"
+    document.getElementById("field").appendChild(openForm);
+    savedTextField.onkeydown = (event) => {
+        if (event.key == 'Enter'){
+            //event.preventDefault();
+            try{
+                console.log(JSON.parse(savedTextField.value))
+                let loadedData = JSON.parse(savedTextField.value)
+                // DECKS.push(...newDECKS)
+                loadedData.forEach(loadedCard => {
+                    console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isRotated = loadedCard.isRotated;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isOpen = loadedCard.isOpen;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].scale = loadedCard.scale;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].zIndex = loadedCard.zIndex;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].top = loadedCard.top;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].left = loadedCard.left;
+                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].addToField();
+                    
+                })
+
+            }
+            catch(err){
+                console.log(err)
+                if (err) {alert("Не удалось распознать данные", err)}
+            }
+        openForm.remove();
+    }
+        }
+    
+    openForm.appendChild(savedTextField);
+    openForm.onsubmit = (evt) => {
+        evt.preventDefault();
+        try{
+            let newDECKS = JSON.parse(savedTextField.value)
+        }
+        catch{
+            alert ("Не удалось распознать данные")
+        }
+        document.getElementById("openForm").remove();
+    }
+    
+
+
 };
 //save
 document.getElementById("saveField").onclick =() => {
-    console.log (JSON.stringify(DECKS))
-    navigator.clipboard.writeText(JSON.stringify(DECKS))
-  .then(() => {
-    alert ("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл")
-  })
-  .catch(err => {
-    console.log('Something went wrong', err);
-  });
+    const dataForSave = [];
+    let onFieldElems = document.getElementById("field").childNodes
+    onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
+            if (element.classList && element.classList.contains("card")) {
+                console.log(element)
+                let cardDeck = DECKS.find((deck)=>(deck.deckId == element.id.split("-")[0]))
+                console.log(cardDeck.cards[element.id.split("-")[1]])
+                dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
+            }
+    })
+    const cardInfo = JSON.stringify(dataForSave);
+    navigator.clipboard.writeText(cardInfo)
+    .then(() => {
+        alert ("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл")
+    })
+    .catch(err => {
+        console.log('Something went wrong', err);
+    });
+
 };
 //link
 document.getElementById("linkToField").onclick =() => alert ("Сетевые функции пока не готовы");
