@@ -345,10 +345,58 @@ class Deck {
 }
 
 
+//Меню выбора колоды
+const genDeckSelectorMenu = () =>{
+    const deckSelector = document.getElementById("deck-select-menu");
+    deckSelector.innerHTML='';
+    for (let i=0; i<DECKS.length; i++){
+        let menuItem = document.createElement("li");
+        let menuItemLabel = document.createElement("label");
+        menuItemLabel.innerText = DECKS[i].name;
+        let menuItemCheckbox =  document.createElement("input");
+        menuItemCheckbox.type="checkbox";
+        menuItemCheckbox.name = DECKS[i].deckId;
+        menuItemCheckbox.checked = DECKS[i].isAvaluable;
+        menuItemCheckbox.onclick = () =>{
+            DECKS[i].isAvaluable = menuItemCheckbox.checked;
+            if (menuItemCheckbox.checked) {
+                let newAvailableDeck = document.createElement("li");
+                newAvailableDeck.id = "available-deck-"+i;
+                newAvailableDeck.title = DECKS[i].name;
+                newAvailableDeck.onclick = () =>{
+                    if (document.getElementById("available-deck-"+selectedDeck)){
+                        document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+                    }
+                    selectedDeck = i;
+                    DECKS[selectedDeck].emptyDeckBox();
+                    DECKS[selectedDeck].showDeck();
+                    document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
+                }
+                document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
+            } else {
+                document.getElementById("available-deck-"+i).remove()
+                if (selectedDeck == i) {
+                    DECKS[selectedDeck].emptyDeckBox();
+                }
+            }
+        }
 
+        menuItemLabel.prepend(menuItemCheckbox);
+        menuItem.appendChild(menuItemLabel);
+        //console.log(menuItem)
+        deckSelector.appendChild(menuItem)
+    }
+}
 
-const imgs = ["./img/king.png", "./img/queen.png", "./img/jack.png", "./img/king.png", "./img/queen.png", "./img/jack.png"]
-DECKS.push(new Deck("Покерная колода","poker", imgs));
+//Добавление колоды в интерфейс. Используется в файлах колод
+const addDeck = (name,id,imgs) => {
+    DECKS.push(new Deck(name,id, imgs));
+    genDeckSelectorMenu()
+}
+
+const imgsPoker = ["./img/king.png", "./img/queen.png", "./img/jack.png", "./img/king.png", "./img/queen.png", "./img/jack.png"]
+
+addDeck("Покерная колода","poker", imgsPoker);
 // DECKS[0].pushCardOnField(0);
 // DECKS[0].isAvaluable=true;
 // DECKS[selectedDeck].showDeck()
@@ -424,49 +472,49 @@ prevDeckBtn.onclick = () => {
     //     alert ("Нет активных колод")
     // }
 }
-//Меню выбора колоды
-const genDeckSelectorMenu = () =>{
-    const deckSelector = document.getElementById("deck-select-menu");
-    deckSelector.innerHTML='';
-    for (let i=0; i<DECKS.length; i++){
-        let menuItem = document.createElement("li");
-        let menuItemLabel = document.createElement("label");
-        menuItemLabel.innerText = DECKS[i].name;
-        let menuItemCheckbox =  document.createElement("input");
-        menuItemCheckbox.type="checkbox";
-        menuItemCheckbox.name = DECKS[i].deckId;
-        menuItemCheckbox.checked = DECKS[i].isAvaluable;
-        menuItemCheckbox.onclick = () =>{
-            DECKS[i].isAvaluable = menuItemCheckbox.checked;
-            if (menuItemCheckbox.checked) {
-                let newAvailableDeck = document.createElement("li");
-                newAvailableDeck.id = "available-deck-"+i;
-                newAvailableDeck.title = DECKS[i].name;
-                newAvailableDeck.onclick = () =>{
-                    if (document.getElementById("available-deck-"+selectedDeck)){
-                        document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
-                    }
-                    selectedDeck = i;
-                    DECKS[selectedDeck].emptyDeckBox();
-                    DECKS[selectedDeck].showDeck();
-                    document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
-                }
-                document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
-            } else {
-                document.getElementById("available-deck-"+i).remove()
-                if (selectedDeck == i) {
-                    DECKS[selectedDeck].emptyDeckBox();
-                }
-            }
-        }
+// //Меню выбора колоды
+// const genDeckSelectorMenu = () =>{
+//     const deckSelector = document.getElementById("deck-select-menu");
+//     deckSelector.innerHTML='';
+//     for (let i=0; i<DECKS.length; i++){
+//         let menuItem = document.createElement("li");
+//         let menuItemLabel = document.createElement("label");
+//         menuItemLabel.innerText = DECKS[i].name;
+//         let menuItemCheckbox =  document.createElement("input");
+//         menuItemCheckbox.type="checkbox";
+//         menuItemCheckbox.name = DECKS[i].deckId;
+//         menuItemCheckbox.checked = DECKS[i].isAvaluable;
+//         menuItemCheckbox.onclick = () =>{
+//             DECKS[i].isAvaluable = menuItemCheckbox.checked;
+//             if (menuItemCheckbox.checked) {
+//                 let newAvailableDeck = document.createElement("li");
+//                 newAvailableDeck.id = "available-deck-"+i;
+//                 newAvailableDeck.title = DECKS[i].name;
+//                 newAvailableDeck.onclick = () =>{
+//                     if (document.getElementById("available-deck-"+selectedDeck)){
+//                         document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+//                     }
+//                     selectedDeck = i;
+//                     DECKS[selectedDeck].emptyDeckBox();
+//                     DECKS[selectedDeck].showDeck();
+//                     document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
+//                 }
+//                 document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
+//             } else {
+//                 document.getElementById("available-deck-"+i).remove()
+//                 if (selectedDeck == i) {
+//                     DECKS[selectedDeck].emptyDeckBox();
+//                 }
+//             }
+//         }
 
-        menuItemLabel.prepend(menuItemCheckbox);
-        menuItem.appendChild(menuItemLabel);
-        //console.log(menuItem)
-        deckSelector.appendChild(menuItem)
-    }
-}
-genDeckSelectorMenu()
+//         menuItemLabel.prepend(menuItemCheckbox);
+//         menuItem.appendChild(menuItemLabel);
+//         //console.log(menuItem)
+//         deckSelector.appendChild(menuItem)
+//     }
+// }
+//genDeckSelectorMenu()
 
 //=================================================================================//
 //                                  Кнопки меню                                    //

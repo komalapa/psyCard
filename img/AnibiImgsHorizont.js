@@ -97,5 +97,4 @@ const imgsAnibiHorizont = [
     "./img/cards-imgs/Аниби картинки Горизонт/Аниби картинки (96).jpg",
     
 ]
-DECKS.push(new Deck("Аниби горизонтальные","anibi-horizont", imgsAnibiHorizont, "120px", "170px", 1, true));
-genDeckSelectorMenu()
+addDeck("Аниби горизонтальные","anibi-horizont", imgsAnibiHorizont, "120px", "170px", 1, true);
