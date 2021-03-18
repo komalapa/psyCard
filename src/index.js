@@ -270,6 +270,8 @@ class Card {
     deleteFromField() {
         document.getElementById(this.cardId).remove();
         this.isOnField = false;
+        this.isOpen = DECKS.find(deck=>deck.deckId == this.deckId).isOpen;
+        //console.log(DECKS.find(deck=>deck.deckId == this.deckId).isShown , DECKS.find(deck=>deck.deckId == this.deckId).name);
         DECKS.map(item => {
             if (item.deckId == this.deckId && item.isShown) {
                 item.emptyDeckBox();
@@ -352,6 +354,7 @@ class Deck {
         const deckElement = document.getElementById("deck-box");
         deckElement.innerHTML = '';
         this.isShown = false;
+        //console.log(this.deckId)
     }
 }
 
@@ -376,6 +379,7 @@ const genDeckSelectorMenu = () =>{
                 newAvailableDeck.title = DECKS[i].name;
                 if (typeof(selectedDeck) == "number"){//(document.getElementById("available-deck-"+selectedDeck)){
                     document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+                    DECKS[selectedDeck].emptyDeckBox();
                 }
                 newAvailableDeck.classList.add("selected-deck")
                 selectedDeck = i;
@@ -384,18 +388,23 @@ const genDeckSelectorMenu = () =>{
                 newAvailableDeck.onclick = () =>{
                     if (typeof(selectedDeck) == "number"){//(document.getElementById("available-deck-"+selectedDeck)){
                         document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
+                        DECKS[selectedDeck].emptyDeckBox();
                     }
+                    
                     selectedDeck = i;
-                    DECKS[selectedDeck].emptyDeckBox();
                     DECKS[selectedDeck].showDeck();
                     document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
                 }
                 document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
             } else {
+                //console.log(selectedDeck, i)
                 document.getElementById("available-deck-"+i).remove()
                 if (selectedDeck == i) {
                     DECKS[selectedDeck].emptyDeckBox();
                     selectedDeck = null;
+                } else {
+                    //console.log("deleted not active")
+                    
                 }
             }
         }
@@ -408,8 +417,8 @@ const genDeckSelectorMenu = () =>{
 }
 
 //Добавление колоды в интерфейс. Используется в файлах колод
-const addDeck = (name,id,imgs) => {
-    DECKS.push(new Deck(name,id, imgs));
+const addDeck = (name,id, imgs, height = "170px", width = "120px", scale = 1, isHorizontal = false) => {
+    DECKS.push(new Deck(name,id, imgs, height, width,scale,isHorizontal));
     genDeckSelectorMenu()
 }
 
@@ -475,7 +484,7 @@ nextDeckBtn.onclick = () => {
             selectedDeck = (selectedDeck >= DECKS.length - 1) ? 0 : ++selectedDeck;
         }
         if (selectedDeck != oldSelectedDeck){
-            DECKS[selectedDeck].emptyDeckBox();
+            DECKS[oldSelectedDeck].emptyDeckBox();
             DECKS[selectedDeck].showDeck();
             document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
             document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
@@ -494,7 +503,7 @@ prevDeckBtn.onclick = () => {
             selectedDeck = (selectedDeck == 0) ? DECKS.length - 1 : --selectedDeck;
         }
         if (selectedDeck != oldSelectedDeck){
-            DECKS[selectedDeck].emptyDeckBox();
+            DECKS[oldSelectedDeck].emptyDeckBox();
             DECKS[selectedDeck].showDeck();
             document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
             document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
@@ -547,11 +556,11 @@ document.getElementById("openField").onclick =() => {
         if (event.key == 'Enter'){
             //event.preventDefault();
             try{
-                console.log(JSON.parse(savedTextField.value))
+                //console.log(JSON.parse(savedTextField.value))
                 let loadedData = JSON.parse(savedTextField.value)
                 // DECKS.push(...newDECKS)
                 loadedData.forEach(loadedCard => {
-                    console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
+                    //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
                     DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isRotated = loadedCard.isRotated;
                     DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isOpen = loadedCard.isOpen;
                     DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].scale = loadedCard.scale;
@@ -564,7 +573,7 @@ document.getElementById("openField").onclick =() => {
 
             }
             catch(err){
-                console.log(err)
+                //console.log(err)
                 if (err) {alert("Не удалось распознать данные", err)}
             }
         openForm.remove();
@@ -592,9 +601,9 @@ document.getElementById("saveField").onclick =() => {
     let onFieldElems = document.getElementById("field").childNodes
     onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
             if (element.classList && element.classList.contains("card")) {
-                console.log(element)
+                //console.log(element)
                 let cardDeck = DECKS.find((deck)=>(deck.deckId == element.id.split("-")[0]))
-                console.log(cardDeck.cards[element.id.split("-")[1]])
+                //console.log(cardDeck.cards[element.id.split("-")[1]])
                 dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
             }
     })
