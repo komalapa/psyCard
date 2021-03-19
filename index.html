@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./img/icon-fonts/menu/styles.css">
+    <script src="./src/index.js" defer></script>
+    <!--импорты картинок на картах -->
+    <script src="./img/anibiImgs.js" defer></script>
+    <script src="./img/AnibiImgsHorizont.js" defer></script>
+    <script src="./img/anibiWords.js" defer></script>
+    
+    <!-- END импорты картинок на картах -->
     <link rel="shortcut icon" href="./img/playing-card-568201_640.png" type="image/x-icon">
     <title>CardRoom</title>
 </head>
@@ -14,63 +21,22 @@
     <nav class="main-menu">
         <ul class="main-menu-list">
             <li class="main-menu-list-item"><a href="#">
-                    <div data-icon="a" class="icon"></div>
+                    <div data-icon="a" class="icon" id="newFieldBtn"></div>
                 </a></li>
-            <li class="main-menu-list-item"><a href="#">
+            <li class="main-menu-list-item" id="openField"><a href="#">
                     <div data-icon="b" class="icon"></div>
                 </a></li>
-            <li class="main-menu-list-item"><a href="#">
+            <li class="main-menu-list-item" id="saveField"><a href="#">
                     <div data-icon="c" class="icon"></div>
                 </a></li>
-            <li class="main-menu-list-item"><a href="#">
+            <li class="main-menu-list-item"id="linkToField"><a href="#">
                     <div data-icon="d" class="icon"></div>
                 </a></li>
         </ul>
     </nav>
     <main>
         <div class="workspace">
-            <div class="field">
-                <!-- copy-card больше похожа на пример -->
-                <div class="card test-card other-card">
-                    <div class="card-position-controls-wrp card-controls">
-                        <div data-icon="f" class="icon card-resize card-icon "></div>
-                        <div data-icon="e" class="icon card-rotate card-icon-rotate card-icon "></div>
-                    </div>
-                    <div class="card-controls-left-wrp card-controls">
-                        <div data-icon="g" class="icon card-icon"></div>
-                        <div data-icon="h" class="icon card-icon"></div>
-                        <div data-icon="i" class="icon card-icon"></div>
-                        <div data-icon="j" class="icon card-icon"></div>
-                    </div>
-                </div>
-                <div class="card test-card copy-card">
-                    <div class="card-position-controls-wrp card-controls">
-                        <div data-icon="f" class="icon card-resize card-icon "></div>
-                        <div data-icon="e" class="icon card-rotate card-icon-rotate card-icon "></div>
-                    </div>
-                    <div class="card-controls-left-wrp card-controls">
-                        <div data-icon="g" class="icon card-icon"></div>
-                        <div data-icon="h" class="icon card-icon"></div>
-                        <div data-icon="i" class="icon card-icon"></div>
-                        <div data-icon="j" class="icon card-icon"></div>
-                    </div>
-                </div>
-                <div class="card test-card third-card">
-                    <div class="card-controls-wrp card-controls">
-                        <div class="card-rotate-btn">
-                            <div data-icon="e" class="icon card-icon card-icon-rotate"></div>
-                            <input type="checkbox" name="checkbox-rotate" id="" class="card-rotate-checkbox">
-                        </div>
-                        <div data-icon="g" class="icon card-icon"></div>
-                        <div data-icon="h" class="icon card-icon"></div>
-                        <div data-icon="i" class="icon card-icon"></div>
-                        <!-- <div data-icon="j" class="icon card-icon"></div> -->
-                        <div class="card-mirror-btn">
-                            <div data-icon="j" class="icon card-icon card-icon-rotate"></div>
-                            <input type="checkbox" name="checkbox-mirror" id="" class="card-mirror-checkbox">
-                        </div>
-                    </div>
-                </div>
+            <div class="field" id="field">
             </div>
 
             <div id="deck-view-control">
@@ -81,422 +47,46 @@
 
                 <div id="deck-view-tray">
                     <div class="deck-action">
-                        <div data-icon="p" class="icon deck-control-icon"></div>
+                        <div class="dropdown-deck-select form-group">
+                            <label data-icon="p" class="icon deck-control-icon dropdown-deck-select-label-title"></label>
+                            <ul id="deck-select-menu">
+                              <li><label><input type="checkbox" name="type[]">A</label></li>
+                              <li><label><input type="checkbox" name="type[]">B</label></li>
+                              <li><label><input type="checkbox" name="type[]">C</label></li>
+                            </ul>
+                        </div>
+                        
                         <div class="deck-selector">
-                            <div class="card">
-                                <div class="card-position-controls-wrp card-controls">
-                                    <div data-icon="f" class="icon card-resize card-icon "></div>
-                                    <div data-icon="e" class="icon card-rotate card-icon "></div>
-                                </div>
-                                <div class="card-controls-left-wrp card-controls">
-                                    <div data-icon="g" class="icon card-icon"></div>
-                                    <div data-icon="h" class="icon card-icon"></div>
-                                    <div data-icon="i" class="icon card-icon"></div>
-                                </div>
-                            </div>
+                            <ul class="deck-selector-list" id="available-decks-selector">
+                               <!-- <li></li>
+                               <li></li>
+                               <li></li>
+                               <li></li>  -->
+                            </ul>
                             <div class="deck-selector-controls">
-                                <div data-icon="q" class="icon deck-control-icon"></div>
-                                <div data-icon="r" class="icon deck-control-icon"></div>
+                                <div data-icon="q" class="icon deck-control-icon" id="prev-deck-btn"></div>
+                                <div data-icon="r" class="icon deck-control-icon" id="next-deck-btn"></div>
                             </div>
                         </div>
                         <div class="deck-control">
-                            <div data-icon="i" class="icon deck-control-icon"></div>
-                            <div data-icon="k" class="icon deck-control-icon"></div>
-                            <div class="deck-control-show-cards deck-control-icon">
+                            <div data-icon="i" class="icon deck-control-icon" id="deck-push-to-field-btn"></div>
+                            <div data-icon="k" class="icon deck-control-icon" id="deck-shuffle-btn"></div>
+                            <div class="deck-control-show-cards deck-control-icon" id="deck-open-cards-bth">
                                 <div data-icon="l" class="icon"></div>
                                 <input type="checkbox" class="deck-control-show-cards-check"
                                     name="deck-control-open-cards" id="deck-control-open-cards">
                                 <span></span>
                             </div>
+                            <div class="deck-control-cards-view deck-control-icon" id="deck-cards-view-bth">
+                                <div data-icon="s" class="icon"></div>
+                                <input type="checkbox" class="deck-control-cards-view-check"
+                                    name="deck-control-cards-view" id="deck-control-cards-view">
+                                <span></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="deck-cards cards-overlap">
-                        <!-- cards-split -->
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-position-controls-wrp card-controls">
-                                <div data-icon="f" class="icon card-resize card-icon "></div>
-                                <div data-icon="e" class="icon card-rotate card-icon "></div>
-                            </div>
-                            <div class="card-controls-left-wrp card-controls">
-                                <div data-icon="g" class="icon card-icon"></div>
-                                <div data-icon="h" class="icon card-icon"></div>
-                                <div data-icon="i" class="icon card-icon"></div>
-                            </div>
-                        </div>
+                    <div id="deck-box" class="deck-cards cards-split">
+                        <!-- cards-split cards-overlap-->
                     </div>
 
                 </div>

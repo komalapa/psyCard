@@ -11,6 +11,7 @@ body {
     width: 100%;
     background-color: #fff;
     position: absolute;
+    z-index: 1500;/*карты не выходят за 1100*/
     top: -35px;
     transition: top 0.5s;
     border-bottom: 4px solid lightgrey;
@@ -67,12 +68,11 @@ body {
 .field {
     height: 100%;
     width: 100%;
+    padding: 20px;
     box-sizing: border-box;
+    position: relative;
 }
 
-.test-card {
-    margin: 30px;
-}
 
 /*https://codepen.io/erikterwan/pen/EVzeRP */
 /* Made by Erik Terwan
@@ -84,7 +84,7 @@ body {
     bottom: 35px;
     left: 10px;
 
-    z-index: 1;
+    z-index: 1500;
 
     -webkit-user-select: none;
     user-select: none;
@@ -106,7 +106,7 @@ body {
     cursor: pointer;
 
     opacity: 0;
-    z-index: 2;
+    z-index: 1500;
 
     -webkit-touch-callout: none;
 }
@@ -163,13 +163,10 @@ body {
     padding: 10px;
     box-sizing: border-box;
     background: #ededed;
-
     -webkit-font-smoothing: antialiased;
     /* to stop flickering of text in safari */
-
     transform-origin: 0% 0%;
     transform: translate(-100%, 0);
-
     transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
 }
 
@@ -177,23 +174,9 @@ body {
     transform: none;
 }
 
-.field {
-    padding: 20px;
-    height: 100%;
-    box-sizing: border-box;
-    display:flex;
-    flex-wrap: wrap;
+.field .card{
+    position: absolute;
 }
-
-.card {
-    width: 60px;
-    height: 85px;
-    border: 2px solid black;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .card {
     width: 120px;
     height: 170px;
@@ -203,112 +186,36 @@ body {
     flex-wrap: wrap;
     background: rgb(95, 158, 160);
     background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
-
-}
-
-.copy-card .card-position-controls-wrp {
-    display: flex;
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-}
-
-.copy-card .card-controls-left-wrp {
-    display: flex;
-    flex-direction: column;
-    margin-left: -18px;
-    padding: 0 5px;
-}
-
-.copy-card .card-icon {
-    font-size: 10px;
-    color: gray;
-}
-
-.copy-card .card-icon:hover {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.copy-card .card-resize {
-    margin-top: -9px;
-    margin-right: -9px;
-}
-
-.copy-card .card-rotate {
-    margin-top: -8px;
-    margin-left: -12px;
-}
-
-.copy-card .card-controls {
-    display: none;
-}
-
-.copy-card:hover .card-controls {
-    display: flex;
-}
-
-/* other card control */
-.other-card {
-    resize: both;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.other-card .card-position-controls-wrp {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-}
-
-.other-card .card-controls-left-wrp {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 5px;
-}
-
-.other-card .card-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 17px;
-    height: 17px;
-    margin: 1px;
-    font-size: 12px;
-    color: black;
-    opacity: 0.5;
-    border-radius: 50%;
-    background-color: #fff;
-}
-
-.other-card .card-icon:hover {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-}
-
-.other-card .card-resize {
-    display: none;
-}
-
-.other-card .card-controls {
-    display: none;
-}
-
-.other-card:hover .card-controls {
-    display: flex;
-}
-.other-card .card-icon-rotate:hover{
-    transform: rotate(360deg);
-    transition: transform 0.5s;
-}
-
-/* end other card control */
-
-/*3rd card*/
-.third-card {
-    resize: both;
+    position: relative;
+    visibility: visible;
     overflow: hidden;
 }
-.third-card .card-icon {
+.card .mirrorred-card{
+    transform: scaleX(-1);
+}
+.card .rotated-card{
+    transform: rotate(180deg);
+}
+.card .hidden-card{
+    visibility: hidden;
+    
+}
+.card-img-wrp{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: rotate(0deg);
+    transition: transform 0.3s;
+}
+
+.card img{
+    width: 100%;
+    height: 100%;
+    transform: scaleX(1);
+    transition: transform 0.3s;
+}
+
+.card .card-icon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -322,22 +229,27 @@ body {
     background-color: #fff;
     transition: opacity 0.2s;
 }
-.third-card .card-icon:hover {
-    opacity: 0.7;  
+.card .card-icon:hover, .card-checkbox-btn:hover .card-icon {
+    opacity: 0.9;  
 }
-.third-card .card-controls-wrp {
-    /* display: flex; */
+.card .card-controls-wrp {
+    height: 100%;
     justify-content: center;
     flex-direction: column;
+    flex-wrap: wrap;
     display: none;
 }
-.third-card:hover .card-controls-wrp {
+.card:hover{
+    z-index: 1001;
+}
+.card:hover .card-controls-wrp {
     display: flex;
 }
-.card-rotate-btn{
+
+.card-checkbox-btn{
     position: relative;
 }
-.card-rotate-btn .card-rotate-checkbox{
+.card-checkbox-btn .card-checkbox{
     position:absolute;
     width: 15px;
     height: 15px;
@@ -345,28 +257,16 @@ body {
     left: -2px;
     opacity: 0;
 }
+.card-checkbox-btn:hover .card-icon{
+    transition: transform 0.5s;
+}
+
 .card-rotate-btn:hover .card-icon{
     transform: rotate(360deg);
-    transition: transform 0.5s;
-    opacity: 0.7;
-}
-.card-mirror-btn{
-    position: relative;
-}
-.card-mirror-btn .card-mirror-checkbox{
-    position:absolute;
-    width: 15px;
-    height: 15px;
-    top: -1px;
-    left: -2px;
-    opacity: 0;
 }
 .card-mirror-btn:hover .card-icon{
     transform: scaleX(-1);
-    transition: transform 0.5s;
-    opacity: 0.7;
 }
-/* end3rd card*/
 
 #deck-view-tray .card-controls {
     display: none
@@ -382,8 +282,6 @@ body {
     display: flex;
     height: 170px;
     min-width: 120px;
-    background: rgb(95, 158, 160);
-    background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
 }
 
 .deck-action {
@@ -394,24 +292,41 @@ body {
 
 .deck-cards {
     display: flex;
+    align-items: center;
     overflow: scroll;
     padding: 20px;
     box-sizing: border-box;
     width: 100%;
 }
-
-.deck-cards .card {
+#deck-box{
     position: relative;
-    z-index: 1;
+    z-index: 500;
+}
+
+#deck-box .card {
+    position: relative;
+    z-index: 500;
+    top:auto !important;
+    left: auto !important;
+    width: 120px !important;
+    height: 170px !important;
+    transform: scale(1) !important;
+}
+#deck-box .card-horizontal{
+    min-width: 240px !important;
 }
 
 .deck-cards .card:hover {
-    z-index: 2;
+    z-index: 501;
 }
 
+.cards-overlap .card.card-horizontal:not(:first-child) {
+    margin-left: -180px;
+}
 .cards-overlap .card:not(:first-child) {
     margin-left: -90px;
 }
+
 
 .cards-split .card:not(:first-child) {
     margin-left: 10px;
@@ -425,16 +340,16 @@ body {
     margin-left: 10px;
 }
 
-.deck-control-show-cards {
+.deck-control-show-cards, .deck-control-cards-view {
     position: relative;
 }
 
-.deck-control-show-cards .icon {
+.deck-control-show-cards .icon, .deck-control-cards-view .icon {
     width: 100%;
     height: 100%;
 }
 
-.deck-control-show-cards input {
+.deck-control-show-cards input, .deck-control-cards-view input {
     position: absolute;
     z-index: 2;
     display: block;
@@ -450,7 +365,7 @@ body {
     display: none;
 }
 
-.deck-control-show-cards-check:checked+span {
+.deck-control-show-cards-check:not(:checked)+span {
     display: block;
     width: 20px;
     height: 0px;
@@ -476,7 +391,80 @@ body {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.deck-selector-list{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 120px;
+    height: 170px;
+    list-style:none;
+    padding: 0;
+    border: 2px solid gray;
+    border-radius: 10px; 
+    overflow-y: auto;  
+}
+.deck-selector-list li{
+    display: block;
+    width:35%;
+    height: 35%;
+    background: rgb(95, 158, 160);
+    background: linear-gradient(34deg, rgba(95, 158, 160, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(95, 158, 160, 1) 100%);
+    border-radius: 3px;
+    border: 2px solid black;
+    margin-top: 5%;
+}
+.deck-selector-list li:hover{
+    border-color:lightblue
+}
+.deck-selector-list  .selected-deck{
+    border-color: olive;
+}
+.selected-deck:after{
+    content:"\2714";
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    color: olive;
+}
+
 .deck-selector-controls {
     display: flex;
     justify-content: space-around;
 }
+
+/*dropdown deck selector (https://codepen.io/findtuts/pen/ZemoJG)*/
+.dropdown-deck-select{
+    position:relative;
+    display:inline-block;
+    height: 15px;;
+  }
+  
+  
+  .dropdown-deck-select ul{
+       position: absolute;
+      background: #cacaca;
+      list-style: none;
+      min-width: 180px;
+      margin: 0px;
+      padding:0px;
+      left:0px;
+        display:none;
+        z-index:1;
+      border: 1px solid #9c9c9c;
+      overflow-y: scroll;
+      height: 200px;
+  }
+  .dropdown-deck-select ul li{
+      font-size: 15px;
+      padding: 10px;
+      border-bottom: 1px solid #a5a5a5;
+      margin: 0px;
+  }
+  .dropdown-deck-select ul li input{
+    margin-right:10px;
+  }
+  
+  .dropdown-deck-select:hover ul{
+    display:block
+  }

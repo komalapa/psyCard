@@ -92,3 +92,12 @@
 .icon-arrow-right:before {
   content: "\72";
 }
+.icon-search-minus:before {
+  content: "\75";
+}
+.icon-search-plus:before {
+  content: "\76";
+}
+.icon-clone:before {
+  content: "\73";
+}
