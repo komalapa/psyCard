@@ -619,3 +619,16 @@ document.getElementById("saveField").onclick =() => {
 };
 //link
 document.getElementById("linkToField").onclick =() => alert ("Сетевые функции пока не готовы");
+
+//grid
+const fieldGridBtn = document.getElementById("control-field-grid-bth");
+const fieldGridCheckBox = document.getElementById("control-field-grid");
+
+fieldGridBtn.onclick = () => {
+    const field = document.getElementById("field");
+    if (fieldGridCheckBox.checked){
+        field.classList.add("grid-on-field")
+    } else {
+        field.classList.remove("grid-on-field") 
+    }
+}
