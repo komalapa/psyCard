@@ -627,8 +627,29 @@ const fieldGridCheckBox = document.getElementById("control-field-grid");
 fieldGridBtn.onclick = () => {
     const field = document.getElementById("field");
     if (fieldGridCheckBox.checked){
-        field.classList.add("grid-on-field")
+        if (fieldChessCheckBox){
+            fieldChessCheckBox.checked = false;
+            field.classList.remove("chess-on-field") 
+        }
+        field.classList.add("grid-on-field");
     } else {
         field.classList.remove("grid-on-field") 
+    }
+}
+
+//chess
+const fieldChessBtn = document.getElementById("control-field-chess-bth");
+const fieldChessCheckBox = document.getElementById("control-field-chess");
+
+fieldChessBtn.onclick = () => {
+    const field = document.getElementById("field");
+    if (fieldChessCheckBox.checked){
+        if (fieldGridCheckBox.checked){
+            fieldGridCheckBox.checked = false;
+            field.classList.remove("grid-on-field")
+        }
+        field.classList.add("chess-on-field")
+    } else {
+        field.classList.remove("chess-on-field") 
     }
 }
