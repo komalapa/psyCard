@@ -113,7 +113,8 @@ class Card {
         scaleUpIcon.className = "icon card-icon";
         scaleUpIcon.setAttribute("data-icon", "v");
         scaleUpIcon.onclick = () => {
-            if ((this.scale + 0.2) < 5) {
+            console.log(this.scale)
+            if ((this.scale + 0.2) <= 5) {
                 this.scale += 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
@@ -124,7 +125,8 @@ class Card {
         scaleDownIcon.className = "icon card-icon";
         scaleDownIcon.setAttribute("data-icon", "u");
         scaleDownIcon.onclick = () => {
-            if ((this.scale - 0.2) > 0.5) {
+            console.log(this.scale)
+            if ((this.scale - 0.2) > 0.49) {
                 this.scale -= 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
