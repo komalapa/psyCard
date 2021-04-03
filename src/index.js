@@ -113,7 +113,8 @@ class Card {
         scaleUpIcon.className = "icon card-icon";
         scaleUpIcon.setAttribute("data-icon", "v");
         scaleUpIcon.onclick = () => {
-            if ((this.scale + 0.2) < 5) {
+            console.log(this.scale)
+            if ((this.scale + 0.2) <= 5) {
                 this.scale += 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
@@ -124,7 +125,8 @@ class Card {
         scaleDownIcon.className = "icon card-icon";
         scaleDownIcon.setAttribute("data-icon", "u");
         scaleDownIcon.onclick = () => {
-            if ((this.scale - 0.2) > 0.5) {
+            console.log(this.scale)
+            if ((this.scale - 0.2) > 0.49) {
                 this.scale -= 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
@@ -619,3 +621,37 @@ document.getElementById("saveField").onclick =() => {
 };
 //link
 document.getElementById("linkToField").onclick =() => alert ("Сетевые функции пока не готовы");
+
+//grid
+const fieldGridBtn = document.getElementById("control-field-grid-bth");
+const fieldGridCheckBox = document.getElementById("control-field-grid");
+
+fieldGridBtn.onclick = () => {
+    const field = document.getElementById("field");
+    if (fieldGridCheckBox.checked){
+        if (fieldChessCheckBox){
+            fieldChessCheckBox.checked = false;
+            field.classList.remove("chess-on-field") 
+        }
+        field.classList.add("grid-on-field");
+    } else {
+        field.classList.remove("grid-on-field") 
+    }
+}
+
+//chess
+const fieldChessBtn = document.getElementById("control-field-chess-bth");
+const fieldChessCheckBox = document.getElementById("control-field-chess");
+
+fieldChessBtn.onclick = () => {
+    const field = document.getElementById("field");
+    if (fieldChessCheckBox.checked){
+        if (fieldGridCheckBox.checked){
+            fieldGridCheckBox.checked = false;
+            field.classList.remove("grid-on-field")
+        }
+        field.classList.add("chess-on-field")
+    } else {
+        field.classList.remove("chess-on-field") 
+    }
+}

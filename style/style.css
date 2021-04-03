@@ -3,7 +3,9 @@ body {
     padding: 0;
     width: 100%;
 }
-
+/* main{
+    background-color: ivory;
+} */
 .main-menu {
     display: flex;
     justify-content: flex-start;
@@ -60,7 +62,7 @@ body {
 
 .workspace {
     display: block;
-    background-color: ivory;
+    background-color: lightgrey;
     width: 100%;
     height: 100vh;
 }
@@ -71,6 +73,20 @@ body {
     padding: 20px;
     box-sizing: border-box;
     position: relative;
+    background-color: ivory;
+}
+.grid-on-field{
+    background:  linear-gradient(transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%),linear-gradient(to left, transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%), ivory;
+    background-size: 1280px auto;
+    /* background-color: ivory; */
+    width: 1280px;
+    overflow: hidden;
+}
+.chess-on-field{
+    background: ivory no-repeat url("../img/chess/field.png");
+    background-size: 960px 960px;
+    background-position: top 30px left 10px;
+    min-height: 1100px;
 }
 
 
@@ -340,16 +356,16 @@ body {
     margin-left: 10px;
 }
 
-.deck-control-show-cards, .deck-control-cards-view {
+.deck-control-show-cards, .deck-control-cards-view, .control-field-bckgrnd {
     position: relative;
 }
 
-.deck-control-show-cards .icon, .deck-control-cards-view .icon {
+.deck-control-show-cards .icon, .deck-control-cards-view .icon, .control-field-bckgrnd .icon {
     width: 100%;
     height: 100%;
 }
 
-.deck-control-show-cards input, .deck-control-cards-view input {
+.deck-control-show-cards input, .deck-control-cards-view input, .control-field-bckgrnd input {
     position: absolute;
     z-index: 2;
     display: block;
@@ -361,11 +377,11 @@ body {
 
 }
 
-.deck-control-show-cards-check+span {
+.deck-control-show-cards-check+span, .control-field-bckgrnd-check+span {
     display: none;
 }
 
-.deck-control-show-cards-check:not(:checked)+span {
+.deck-control-show-cards-check:not(:checked)+span, .control-field-bckgrnd-check:not(:checked)+span{
     display: block;
     width: 20px;
     height: 0px;
@@ -376,7 +392,11 @@ body {
     top: -1px;
     content: "";
 }
-
+.control-field-bckgrnd-check:not(:checked)+span{
+    top:-2px;
+    left:-4px;
+    width: 24px;
+}
 .deck-control-icon {
     display: block;
     width: 20px;
@@ -387,7 +407,7 @@ body {
 }
 
 .deck-control-icon:hover,
-.deck-control-show-cards:hover {
+.deck-control-show-cards:hover, .control-icon:hover {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
