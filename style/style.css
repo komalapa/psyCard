@@ -60,7 +60,7 @@ body {
 
 .workspace {
     display: block;
-    background-color: ivory;
+    /* background-color: ivory; */
     width: 100%;
     height: 100vh;
 }
@@ -71,12 +71,20 @@ body {
     padding: 20px;
     box-sizing: border-box;
     position: relative;
+    background-color: ivory;
 }
 .grid-on-field{
-    background: linear-gradient(transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%),linear-gradient(to left, transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%);
+    background-image:  linear-gradient(transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%),linear-gradient(to left, transparent 0 33%, #fff 33% 34%, transparent 34% 66%, #fff 66% 67%, transparent 67%);
+    background-size: 1280px 1024;
+    background-color: ivory;
+    width: 1280px;
+    height: 1024px;
 }
 .chess-on-field{
-    background: center / contain no-repeat url("../img/chess/field.png");
+    background: ivory no-repeat url("../img/chess/field.png");
+    background-size: 960px 960px;
+    background-position: top 30px left 10px;
+    min-height: 1100px;
 }
 
 
