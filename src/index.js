@@ -156,6 +156,7 @@ class Card {
         rotateCheckbox.name = this.cardId + "-isrotated";
         rotateCheckbox.onchange = () => {
             this.isRotated = rotateCheckbox.checked;
+            sendToWS();
             if (rotateCheckbox.checked) {
                 document.getElementById(this.cardId + "-img-wrp").classList.add("rotated-card");
             } else {
@@ -182,7 +183,9 @@ class Card {
             } else {
                 alert("Карта на нижнем слое");
             }
+            sendToWS();
         }
+        
         newCardControls.appendChild(downIcon);
 
         let upIcon = document.createElement("div");
@@ -195,6 +198,7 @@ class Card {
             } else {
                 alert("Карта очень высоко");
             }
+            sendToWS();
         }
         newCardControls.appendChild(upIcon);
 
@@ -207,6 +211,7 @@ class Card {
                 this.scale += 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
+            sendToWS();
         }
         newCardControls.appendChild(scaleUpIcon);
 
@@ -219,6 +224,7 @@ class Card {
                 this.scale -= 0.2;
                 newCardHTML.style.transform = `scale(${this.scale})`;
             }
+            sendToWS();
         }
         newCardControls.appendChild(scaleDownIcon);
         //mirror
@@ -234,6 +240,7 @@ class Card {
         mirrorCheckbox.name = this.cardId + "-ismirrorred";
         mirrorCheckbox.onchange = () => {
             this.isMirrorred = mirrorCheckbox.checked;
+            sendToWS();
             if (mirrorCheckbox.checked) {
                 document.getElementById(this.cardId + "-img").classList.add("mirrorred-card")
             } else {
@@ -269,6 +276,7 @@ class Card {
             } else {
                 document.getElementById(this.cardId + "-img").classList.add("hidden-card");
             }
+            sendToWS();
         }
         openIconWrp.appendChild(openIcon);
         openIconWrp.appendChild(openCheckbox);
@@ -388,7 +396,7 @@ class Card {
         document.getElementById(this.cardId).style.top = top;
         document.getElementById(this.cardId).style.left = left;
         document.getElementById(this.cardId).style.zIndex = zIndex;
-        
+        document.getElementById(this.cardId).style.transform = `scale(${this.scale})`;
         
         const rotateCheckbox = document.getElementById(this.cardId + "-isrotated");
         rotateCheckbox.checked = isRotated;
