@@ -1,6 +1,87 @@
 const FIELD_ID = "field";
+const USER_ID = Math. random(). toString(36). substr(2, 9);
 const DECKS = []; //массив колод в комнате
 let selectedDeck = null;//0;
+
+
+//=================================================================================//
+//                                 ws sync                                         //
+//=================================================================================//
+function fieldByText(text){
+    try{
+        //console.log(JSON.parse(savedTextField.value))
+        let loadedData = JSON.parse(text);
+        // DECKS.push(...newDECKS)
+        //console.log('text',text);
+        //console.log('ld',loadedData);
+        loadedData.forEach(loadedCard => {
+            if (loadedCard.userId) return;
+            //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
+            let curCard = DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]];
+            curCard.isRotated = loadedCard.isRotated;
+            curCard.isOpen = loadedCard.isOpen;
+            curCard.scale = loadedCard.scale;
+            curCard.zIndex = loadedCard.zIndex;
+            curCard.top = loadedCard.top;
+            curCard.left = loadedCard.left;
+            if ( !document.getElementById(curCard.cardId) ) curCard.addToField();
+            
+            
+        })
+        console.log("updated")
+
+    }
+    catch(err){
+        //console.log(err)
+        if (err) {alert("Не удалось распознать данные", err)}
+    }
+}
+
+
+function getDataForSend(){
+    const dataForSave = [{userId: USER_ID}];
+    let onFieldElems = document.getElementById(FIELD_ID).childNodes
+    onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
+            if (element.classList && element.classList.contains("card")) {
+                //console.log(element)
+                let cardDeck = DECKS.find((deck)=>(deck.deckId == element.id.split("-")[0]))
+                //console.log(cardDeck.cards[element.id.split("-")[1]])
+                dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
+            }
+    })
+    return JSON.stringify(dataForSave);    
+}
+
+
+let socket = new WebSocket("ws://localhost:8080");///secret");
+
+socket.onopen = function(e) {
+  console.log("[open] Соединение установлено");
+  
+};
+function sendToWS(){
+    console.log("Отправляем данные на сервер");
+    socket.send(getDataForSend());
+}
+
+socket.onmessage = function(event) {
+  console.log(`[message] Данные получены с сервера: ${event.data}`);
+  fieldByText(event.data);
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+  } else {
+    // например, сервер убил процесс или сеть недоступна
+    // обычно в этом случае event.code 1006
+    alert('[close] Соединение прервано');
+  }
+};
+
+socket.onerror = function(error) {
+  alert(`[error] ${error.message}`);
+};
 
 //=================================================================================//
 //                                  Карта                                          //
@@ -212,7 +293,8 @@ class Card {
         };
         const that = this;
         newCardHTML.onmousedown = function (event) { // (1) отследить нажатие
-            
+            let timer = setInterval(sendToWS,1000);
+            //console.log(newCardHTML)
             if (newCardHTML.onmouseup) {//Если карта ждет события прекращаем все события на ней, значит был клик и событие mouseup не сработало
                 window.addEventListener(onmousemove, function (event) {
                     event.stopPropagation();
@@ -244,6 +326,7 @@ class Card {
                     document.removeEventListener('mousemove', onMouseMove);
                     newCardHTML.onmouseup = null;
                     newCardHTML.style.zIndex = that.zIndex;
+                    clearInterval(timer);
                 };
             }
 
@@ -523,7 +606,7 @@ prevDeckBtn.onclick = () => {
 const newFieldBtn = document.getElementById("newFieldBtn");
 newFieldBtn.onclick = () =>{
     if (confirm("Очистить поле? Восстановить расположение карт будет невозможно!")){
-        let onFieldElems = document.getElementById("field").childNodes
+        let onFieldElems = document.getElementById(FIELD_ID).childNodes
         onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
             if (e.classList && e.classList.contains("card")) {
                 //console.log(e)
@@ -531,7 +614,7 @@ newFieldBtn.onclick = () =>{
                 cardDeck.cards[e.id.split("-")[1]].reset();
             }
         })
-        document.getElementById("field").innerHTML=''//очищаем поле
+        document.getElementById(FIELD_ID).innerHTML=''//очищаем поле
         if (typeof(selectedDeck) == "number"){
             DECKS[selectedDeck].emptyDeckBox();
             document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
@@ -553,31 +636,34 @@ document.getElementById("openField").onclick =() => {
     savedTextField.style.width = "100%"
     savedTextField.style.height = "100%"
     savedTextField.placeholder = "Вставьте текст сохранения сюда"
-    document.getElementById("field").appendChild(openForm);
+    document.getElementById(FIELD_ID).appendChild(openForm);
+    
+    
     savedTextField.onkeydown = (event) => {
         if (event.key == 'Enter'){
-            //event.preventDefault();
-            try{
-                //console.log(JSON.parse(savedTextField.value))
-                let loadedData = JSON.parse(savedTextField.value)
-                // DECKS.push(...newDECKS)
-                loadedData.forEach(loadedCard => {
-                    //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isRotated = loadedCard.isRotated;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isOpen = loadedCard.isOpen;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].scale = loadedCard.scale;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].zIndex = loadedCard.zIndex;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].top = loadedCard.top;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].left = loadedCard.left;
-                    DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].addToField();
+            event.preventDefault();
+            // try{
+            //     //console.log(JSON.parse(savedTextField.value))
+            //     let loadedData = JSON.parse(savedTextField.value)
+            //     // DECKS.push(...newDECKS)
+            //     loadedData.forEach(loadedCard => {
+            //         //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isRotated = loadedCard.isRotated;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isOpen = loadedCard.isOpen;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].scale = loadedCard.scale;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].zIndex = loadedCard.zIndex;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].top = loadedCard.top;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].left = loadedCard.left;
+            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].addToField();
                     
-                })
+            //     })
 
-            }
-            catch(err){
-                //console.log(err)
-                if (err) {alert("Не удалось распознать данные", err)}
-            }
+            // }
+            // catch(err){
+            //     //console.log(err)
+            //     if (err) {alert("Не удалось распознать данные", err)}
+            // }
+            fieldByText(savedTextField.value);
         openForm.remove();
     }
         }
@@ -600,7 +686,7 @@ document.getElementById("openField").onclick =() => {
 //save
 document.getElementById("saveField").onclick =() => {
     const dataForSave = [];
-    let onFieldElems = document.getElementById("field").childNodes
+    let onFieldElems = document.getElementById(FIELD_ID).childNodes
     onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
             if (element.classList && element.classList.contains("card")) {
                 //console.log(element)
@@ -627,7 +713,7 @@ const fieldGridBtn = document.getElementById("control-field-grid-bth");
 const fieldGridCheckBox = document.getElementById("control-field-grid");
 
 fieldGridBtn.onclick = () => {
-    const field = document.getElementById("field");
+    const field = document.getElementById(FIELD_ID);
     if (fieldGridCheckBox.checked){
         if (fieldChessCheckBox){
             fieldChessCheckBox.checked = false;
@@ -644,7 +730,7 @@ const fieldChessBtn = document.getElementById("control-field-chess-bth");
 const fieldChessCheckBox = document.getElementById("control-field-chess");
 
 fieldChessBtn.onclick = () => {
-    const field = document.getElementById("field");
+    const field = document.getElementById(FIELD_ID);
     if (fieldChessCheckBox.checked){
         if (fieldGridCheckBox.checked){
             fieldGridCheckBox.checked = false;
@@ -655,3 +741,4 @@ fieldChessBtn.onclick = () => {
         field.classList.remove("chess-on-field") 
     }
 }
+//setInterval(sendToWS, 10000)
