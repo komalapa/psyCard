@@ -24,8 +24,14 @@ function fieldByText(text){
             curCard.zIndex = loadedCard.zIndex;
             curCard.top = loadedCard.top;
             curCard.left = loadedCard.left;
-            if ( !document.getElementById(curCard.cardId) ) curCard.addToField();
-            
+            let cardOnField = document.getElementById(curCard.cardId);
+            if ( cardOnField ) {
+                //document.getElementById(curCard.cardId).remove();
+                cardOnField.style.top = curCard.top;
+                cardOnField.style.left = curCard.left;
+            } else {
+                curCard.addToField();
+            }
             
         })
         console.log("updated")
@@ -293,7 +299,8 @@ class Card {
         };
         const that = this;
         newCardHTML.onmousedown = function (event) { // (1) отследить нажатие
-            let timer = setInterval(sendToWS,1000);
+            let timer = setInterval(()=>{setCoord(newCardHTML.style.top, newCardHTML.style.left);sendToWS();},100);
+            //console.log('this',this)
             //console.log(newCardHTML)
             if (newCardHTML.onmouseup) {//Если карта ждет события прекращаем все события на ней, значит был клик и событие mouseup не сработало
                 window.addEventListener(onmousemove, function (event) {
