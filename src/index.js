@@ -7,6 +7,18 @@ let selectedDeck = null;//0;
 //=================================================================================//
 //                                 ws sync                                         //
 //=================================================================================//
+function deleteAllCards(){
+    let onFieldElems = document.getElementById(FIELD_ID).childNodes
+        onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
+            if (e.classList && e.classList.contains("card")) {
+                //console.log(e)
+                let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
+                cardDeck.cards[e.id.split("-")[1]].reset();
+            }
+        })
+        document.getElementById(FIELD_ID).innerHTML=''
+}
+
 function fieldByText(text){
     try{
         //console.log(JSON.parse(savedTextField.value))
@@ -14,6 +26,11 @@ function fieldByText(text){
         // DECKS.push(...newDECKS)
         //console.log('text',text);
         //console.log('ld',loadedData);
+        if (loadedData.length-1 < document.getElementById('field').childNodes.length){
+            console.log("deleted?", loadedData.length, document.getElementById('field').childNodes.length);
+            deleteAllCards();
+        }
+
         loadedData.forEach(loadedCard => {
             if (loadedCard.userId) return;
             //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
@@ -73,7 +90,7 @@ function sendToWS(){
 }
 
 socket.onmessage = function(event) {
-  console.log(`[message] Данные получены с сервера: ${event.data}`);
+  console.log(`[message] Данные получены с сервера:`);// ${event.data}`);
   fieldByText(event.data);
 };
 
@@ -380,6 +397,7 @@ class Card {
                 item.showDeck()
             }
         })
+        sendToWS();
     }
     open(isOpen) {
         this.isOpen = (typeof isOpen !== 'undefined') ? !this.isOpen : isOpen;
@@ -656,15 +674,16 @@ prevDeckBtn.onclick = () => {
 const newFieldBtn = document.getElementById("newFieldBtn");
 newFieldBtn.onclick = () =>{
     if (confirm("Очистить поле? Восстановить расположение карт будет невозможно!")){
-        let onFieldElems = document.getElementById(FIELD_ID).childNodes
-        onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
-            if (e.classList && e.classList.contains("card")) {
-                //console.log(e)
-                let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
-                cardDeck.cards[e.id.split("-")[1]].reset();
-            }
-        })
-        document.getElementById(FIELD_ID).innerHTML=''//очищаем поле
+        // let onFieldElems = document.getElementById(FIELD_ID).childNodes
+        // onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
+        //     if (e.classList && e.classList.contains("card")) {
+        //         //console.log(e)
+        //         let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
+        //         cardDeck.cards[e.id.split("-")[1]].reset();
+        //     }
+        // })
+        // document.getElementById(FIELD_ID).innerHTML=''//очищаем поле
+        deleteAllCards();
         if (typeof(selectedDeck) == "number"){
             DECKS[selectedDeck].emptyDeckBox();
             document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
