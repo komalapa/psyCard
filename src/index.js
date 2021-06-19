@@ -3,15 +3,10 @@ const USER_ID = Math. random(). toString(36). substr(2, 9);
 const DECKS = []; //массив колод в комнате
 let selectedDeck = null;//0;
 
-
-//=================================================================================//
-//                                 ws sync                                         //
-//=================================================================================//
-function deleteAllCards(){
+function deleteAllCards(){ //delete all cardc from field
     let onFieldElems = document.getElementById(FIELD_ID).childNodes
         onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
             if (e.classList && e.classList.contains("card")) {
-                //console.log(e)
                 let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
                 cardDeck.cards[e.id.split("-")[1]].reset();
             }
@@ -19,21 +14,16 @@ function deleteAllCards(){
         document.getElementById(FIELD_ID).innerHTML=''
 }
 
-function fieldByText(text){
+function fieldByText(text){//put or move cards on field by json text config 
     try{
-        //console.log(JSON.parse(savedTextField.value))
         let loadedData = JSON.parse(text);
-        // DECKS.push(...newDECKS)
-        //console.log('text',text);
-        //console.log('ld',loadedData);
         if (loadedData.length-1 < document.getElementById('field').childNodes.length){
-            console.log("deleted?", loadedData.length, document.getElementById('field').childNodes.length);
+            //console.log("deleted?", loadedData.length, document.getElementById('field').childNodes.length);
             deleteAllCards();
         }
 
         loadedData.forEach(loadedCard => {
             if (loadedCard.userId) return;
-            //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
             let curCard = DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]];
             curCard.isRotated = loadedCard.isRotated;
             curCard.isOpen = loadedCard.isOpen;
@@ -44,69 +34,69 @@ function fieldByText(text){
             curCard.left = loadedCard.left;
             let cardOnField = document.getElementById(curCard.cardId);
             if ( cardOnField ) {
-                //document.getElementById(curCard.cardId).remove();
-                //cardOnField.style.top = curCard.top;
-                //cardOnField.style.left = curCard.left;
                 curCard.refreshByWS(curCard.top, curCard.left, curCard.isRotated, curCard.isOpen, curCard.isMirrorred, curCard.scale, curCard.zIndex);
             } else {
                 curCard.addToField();
             }
-            
         })
-        console.log("updated")
-
     }
     catch(err){
-        //console.log(err)
         if (err) {console.log("Не удалось распознать данные", err)}
     }
 }
 
 
-function getDataForSend(){
+function getDataForSend(){//prepare data for send or save
     const dataForSave = [{userId: USER_ID}];
     let onFieldElems = document.getElementById(FIELD_ID).childNodes
     onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
             if (element.classList && element.classList.contains("card")) {
-                //console.log(element)
                 let cardDeck = DECKS.find((deck)=>(deck.deckId == element.id.split("-")[0]))
-                //console.log(cardDeck.cards[element.id.split("-")[1]])
                 dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
             }
     })
     return JSON.stringify(dataForSave);    
 }
 
-
-let socket = new WebSocket("ws://localhost:8080");///secret");
-
-socket.onopen = function(e) {
-  console.log("[open] Соединение установлено");
-  
-};
+//=================================================================================//
+//                                 ws sync                                         //
+//=================================================================================//
+let socket = null;
+function openWS(isReopening = false){
+    if(!socket || (socket.readyState !== socket.OPEN)){
+        socket = new WebSocket("ws://localhost:8080");
+        socket.onopen = function(e) {
+            console.log("[open] Соединение установлено");
+            if (isReopening) alert("[open] Соединение установлено");
+        };
+        socket.onmessage = function(event) {
+            //console.log(`[message] Данные получены с сервера:`);// ${event.data}`);
+            fieldByText(event.data);
+          };
+          
+        socket.onclose = function(event) {
+            if (event.wasClean) {
+              console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+            } else {
+              alert('[close] Соединение прервано');
+            }
+          };
+          
+          socket.onerror = function(error) {
+            alert(`[error] Ошибка при соединение с сервером ${error.message}`);
+          };
+    } else {
+        alert ('Соединение активно')
+    }
+    //return socket
+}
+openWS()
 function sendToWS(){
-    console.log("Отправляем данные на сервер");
+    //console.log("Отправляем данные на сервер");
     socket.send(getDataForSend());
 }
 
-socket.onmessage = function(event) {
-  console.log(`[message] Данные получены с сервера:`);// ${event.data}`);
-  fieldByText(event.data);
-};
 
-socket.onclose = function(event) {
-  if (event.wasClean) {
-    console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
-  } else {
-    // например, сервер убил процесс или сеть недоступна
-    // обычно в этом случае event.code 1006
-    alert('[close] Соединение прервано');
-  }
-};
-
-socket.onerror = function(error) {
-  alert(`[error] ${error.message}`);
-};
 
 //=================================================================================//
 //                                  Карта                                          //
@@ -143,6 +133,7 @@ class Card {
     setCoord(top, left) {
         this.top = top;
         this.left = left;
+        sendToWS();
     }
     createCardHTML() {
         let cardImgWrp = document.createElement("div"); //оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
@@ -326,7 +317,7 @@ class Card {
         };
         const that = this;
         newCardHTML.onmousedown = function (event) { // (1) отследить нажатие
-            let timer = setInterval(()=>{setCoord(newCardHTML.style.top, newCardHTML.style.left);sendToWS();},100);
+            let timer = setInterval(()=>{setCoord(newCardHTML.style.top, newCardHTML.style.left);},100); //for send to ws
             //console.log('this',this)
             //console.log(newCardHTML)
             if (newCardHTML.onmouseup) {//Если карта ждет события прекращаем все события на ней, значит был клик и событие mouseup не сработало
@@ -511,10 +502,8 @@ class Deck {
         const deckElement = document.getElementById("deck-box");
         deckElement.innerHTML = '';
         this.isShown = false;
-        //console.log(this.deckId)
     }
 }
-
 
 //Меню выбора колоды
 const genDeckSelectorMenu = () =>{
@@ -554,21 +543,16 @@ const genDeckSelectorMenu = () =>{
                 }
                 document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
             } else {
-                //console.log(selectedDeck, i)
                 document.getElementById("available-deck-"+i).remove()
                 if (selectedDeck == i) {
                     DECKS[selectedDeck].emptyDeckBox();
                     selectedDeck = null;
-                } else {
-                    //console.log("deleted not active")
-                    
-                }
+                } 
             }
         }
 
         menuItemLabel.prepend(menuItemCheckbox);
         menuItem.appendChild(menuItemLabel);
-        //console.log(menuItem)
         deckSelector.appendChild(menuItem)
     }
 }
@@ -639,9 +623,7 @@ nextDeckBtn.onclick = () => {
             document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
             document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
         }
-    } //else {
-    //     alert ("Нет активных колод")
-    // }
+    } 
 }
 //предыдущая колода
 const prevDeckBtn = document.getElementById("prev-deck-btn");
@@ -657,9 +639,7 @@ prevDeckBtn.onclick = () => {
             DECKS[selectedDeck].showDeck();
             document.getElementById("available-deck-"+oldSelectedDeck).classList.remove("selected-deck")
             document.getElementById("available-deck-"+selectedDeck).classList.add("selected-deck")
-        }// else {
-    //     alert ("Нет активных колод")
-    // }
+        }
     }
 }
 
@@ -681,7 +661,6 @@ newFieldBtn.onclick = () =>{
 }
 //open
 document.getElementById("openField").onclick =() => {
-    //alert ("we need to load large json..");
     let openForm = document.createElement("form");
     openForm.id = "open-field-form";
     openForm.style.position ="absolute";
@@ -719,18 +698,7 @@ document.getElementById("openField").onclick =() => {
 };
 //save
 document.getElementById("saveField").onclick =() => {
-    const dataForSave = [];
-    let onFieldElems = document.getElementById(FIELD_ID).childNodes
-    onFieldElems.forEach((element)=>{//собираем информацию о картах на поле:
-            if (element.classList && element.classList.contains("card")) {
-                //console.log(element)
-                let cardDeck = DECKS.find((deck)=>(deck.deckId == element.id.split("-")[0]))
-                //console.log(cardDeck.cards[element.id.split("-")[1]])
-                dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
-            }
-    })
-    const cardInfo = JSON.stringify(dataForSave);
-    navigator.clipboard.writeText(cardInfo)
+    navigator.clipboard.writeText(getDataForSend())
     .then(() => {
         alert ("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл")
     })
@@ -740,7 +708,7 @@ document.getElementById("saveField").onclick =() => {
 
 };
 //link
-document.getElementById("linkToField").onclick =() => alert ("Сетевые функции пока не готовы");
+document.getElementById("linkToField").onclick =() => openWS(true);//alert ("Сетевые функции пока не готовы");
 
 //grid
 const fieldGridBtn = document.getElementById("control-field-grid-bth");
