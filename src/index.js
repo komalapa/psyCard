@@ -332,6 +332,7 @@ class Card {
             if (newCardHTML.onmouseup) {//Если карта ждет события прекращаем все события на ней, значит был клик и событие mouseup не сработало
                 window.addEventListener(onmousemove, function (event) {
                     event.stopPropagation();
+                    clearInterval(timer);
                 }, true);
             } else {
                 //console.log(event)
@@ -411,34 +412,37 @@ class Card {
     }
 
     refreshByWS(top, left, isRotated, isOpen, isMirrorred, scale, zIndex){
-        document.getElementById(this.cardId).style.top = top;
-        document.getElementById(this.cardId).style.left = left;
-        document.getElementById(this.cardId).style.zIndex = zIndex;
-        document.getElementById(this.cardId).style.transform = `scale(${this.scale})`;
+        const card = document.getElementById(this.cardId);
+        const cardImg = document.getElementById(this.cardId + "-img");
+        const cardImgWrp = document.getElementById(this.cardId + "-img-wrp");
+        card.style.top = top;
+        card.style.left = left;
+        card.style.zIndex = zIndex;
+        card.style.transform = `scale(${this.scale})`;
         
         const rotateCheckbox = document.getElementById(this.cardId + "-isrotated");
         rotateCheckbox.checked = isRotated;
         if (rotateCheckbox.checked) {
-            document.getElementById(this.cardId + "-img-wrp").classList.add("rotated-card");
+            cardImgWrp.classList.add("rotated-card");
         } else {
-            document.getElementById(this.cardId + "-img-wrp").classList.remove("rotated-card");;
+            cardImgWrp.classList.remove("rotated-card");;
         }
 
         const openCheckbox = document.getElementById(this.cardId + "-isopen");
         openCheckbox.checked = isOpen;
 
         if (openCheckbox.checked) {
-            document.getElementById(this.cardId + "-img").classList.remove("hidden-card")
+            cardImg.classList.remove("hidden-card")
         } else {
-            document.getElementById(this.cardId + "-img").classList.add("hidden-card");
+            cardImg.classList.add("hidden-card");
         }
 
         const mirrorCheckbox = document.getElementById(this.cardId + "-ismirrorred");
         mirrorCheckbox.checked = isMirrorred;
             if (mirrorCheckbox.checked) {
-                document.getElementById(this.cardId + "-img").classList.add("mirrorred-card")
+                cardImg.classList.add("mirrorred-card")
             } else {
-                document.getElementById(this.cardId + "-img").classList.remove("mirrorred-card");
+                cardImg.classList.remove("mirrorred-card");
             }
         
     }
@@ -578,13 +582,6 @@ const addDeck = (name,id, imgs, height = "170px", width = "120px", scale = 1, is
 const imgsPoker = ["./img/king.png", "./img/queen.png", "./img/jack.png", "./img/king.png", "./img/queen.png", "./img/jack.png"]
 
 addDeck("Покерная колода","poker", imgsPoker);
-// DECKS[0].pushCardOnField(0);
-// DECKS[0].isAvaluable=true;
-// DECKS[selectedDeck].showDeck()
-// DECKS[selectedDeck].open()
-
-
-
 
 
 //=================================================================================//
@@ -674,23 +671,12 @@ prevDeckBtn.onclick = () => {
 const newFieldBtn = document.getElementById("newFieldBtn");
 newFieldBtn.onclick = () =>{
     if (confirm("Очистить поле? Восстановить расположение карт будет невозможно!")){
-        // let onFieldElems = document.getElementById(FIELD_ID).childNodes
-        // onFieldElems.forEach((e)=>{//помечаем карты в колодах как не на поле
-        //     if (e.classList && e.classList.contains("card")) {
-        //         //console.log(e)
-        //         let cardDeck = DECKS.find((deck)=>(deck.deckId == e.id.split("-")[0]))
-        //         cardDeck.cards[e.id.split("-")[1]].reset();
-        //     }
-        // })
-        // document.getElementById(FIELD_ID).innerHTML=''//очищаем поле
         deleteAllCards();
         if (typeof(selectedDeck) == "number"){
             DECKS[selectedDeck].emptyDeckBox();
             document.getElementById("available-deck-"+selectedDeck).classList.remove("selected-deck")
             selectedDeck = null;
         }
-        
-        
     }
 }
 //open
@@ -711,31 +697,10 @@ document.getElementById("openField").onclick =() => {
     savedTextField.onkeydown = (event) => {
         if (event.key == 'Enter'){
             event.preventDefault();
-            // try{
-            //     //console.log(JSON.parse(savedTextField.value))
-            //     let loadedData = JSON.parse(savedTextField.value)
-            //     // DECKS.push(...newDECKS)
-            //     loadedData.forEach(loadedCard => {
-            //         //console.log (loadedCard, DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]])
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isRotated = loadedCard.isRotated;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].isOpen = loadedCard.isOpen;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].scale = loadedCard.scale;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].zIndex = loadedCard.zIndex;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].top = loadedCard.top;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].left = loadedCard.left;
-            //         DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]].addToField();
-                    
-            //     })
-
-            // }
-            // catch(err){
-            //     //console.log(err)
-            //     if (err) {alert("Не удалось распознать данные", err)}
-            // }
             fieldByText(savedTextField.value);
         openForm.remove();
-    }
         }
+    }
     
     openForm.appendChild(savedTextField);
     openForm.onsubmit = (evt) => {
@@ -810,4 +775,3 @@ fieldChessBtn.onclick = () => {
         field.classList.remove("chess-on-field") 
     }
 }
-//setInterval(sendToWS, 10000)
