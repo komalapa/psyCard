@@ -20,6 +20,7 @@ function fieldByText(text){
             let curCard = DECKS.find(deck => (deck.deckId == loadedCard.deckId)).cards[loadedCard.cardId.split("-")[1]];
             curCard.isRotated = loadedCard.isRotated;
             curCard.isOpen = loadedCard.isOpen;
+            curCard.isMirrorred = loadedCard.isMirrorred;
             curCard.scale = loadedCard.scale;
             curCard.zIndex = loadedCard.zIndex;
             curCard.top = loadedCard.top;
@@ -27,8 +28,9 @@ function fieldByText(text){
             let cardOnField = document.getElementById(curCard.cardId);
             if ( cardOnField ) {
                 //document.getElementById(curCard.cardId).remove();
-                cardOnField.style.top = curCard.top;
-                cardOnField.style.left = curCard.left;
+                //cardOnField.style.top = curCard.top;
+                //cardOnField.style.left = curCard.left;
+                curCard.refreshByWS(curCard.top, curCard.left, curCard.isRotated, curCard.isOpen, curCard.isMirrorred, curCard.scale, curCard.zIndex);
             } else {
                 curCard.addToField();
             }
@@ -39,7 +41,7 @@ function fieldByText(text){
     }
     catch(err){
         //console.log(err)
-        if (err) {alert("Не удалось распознать данные", err)}
+        if (err) {console.log("Не удалось распознать данные", err)}
     }
 }
 
@@ -380,6 +382,39 @@ class Card {
             document.getElementById(this.cardId + "-img").classList.add("hidden-card");
         }
 
+    }
+
+    refreshByWS(top, left, isRotated, isOpen, isMirrorred, scale, zIndex){
+        document.getElementById(this.cardId).style.top = top;
+        document.getElementById(this.cardId).style.left = left;
+        document.getElementById(this.cardId).style.zIndex = zIndex;
+        
+        
+        const rotateCheckbox = document.getElementById(this.cardId + "-isrotated");
+        rotateCheckbox.checked = isRotated;
+        if (rotateCheckbox.checked) {
+            document.getElementById(this.cardId + "-img-wrp").classList.add("rotated-card");
+        } else {
+            document.getElementById(this.cardId + "-img-wrp").classList.remove("rotated-card");;
+        }
+
+        const openCheckbox = document.getElementById(this.cardId + "-isopen");
+        openCheckbox.checked = isOpen;
+
+        if (openCheckbox.checked) {
+            document.getElementById(this.cardId + "-img").classList.remove("hidden-card")
+        } else {
+            document.getElementById(this.cardId + "-img").classList.add("hidden-card");
+        }
+
+        const mirrorCheckbox = document.getElementById(this.cardId + "-ismirrorred");
+        mirrorCheckbox.checked = isMirrorred;
+            if (mirrorCheckbox.checked) {
+                document.getElementById(this.cardId + "-img").classList.add("mirrorred-card")
+            } else {
+                document.getElementById(this.cardId + "-img").classList.remove("mirrorred-card");
+            }
+        
     }
 }
 //=================================================================================//
