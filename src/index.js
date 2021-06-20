@@ -656,6 +656,7 @@ newFieldBtn.onclick = () => {
             document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck");
             selectedDeck = null;
         }
+        sendToWS();
     }
 }
 //open
