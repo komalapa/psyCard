@@ -246,6 +246,12 @@ class Card {
         mirrorCheckbox.className = "card-checkbox card-mirror-checkbox";
         mirrorCheckbox.id = this.cardId + "-ismirrorred";
         mirrorCheckbox.name = this.cardId + "-ismirrorred";
+        mirrorCheckbox.checked = this.isMirrorred;
+        if (mirrorCheckbox.checked) {
+            cardImg.classList.add("mirrorred-card")
+        } else {
+            cardImg.classList.remove("mirrorred-card");
+        }
         mirrorCheckbox.onchange = () => {
             this.isMirrorred = mirrorCheckbox.checked;
             sendToWS();
@@ -365,7 +371,7 @@ class Card {
         if (!this.isOnField) {
             this.top = top ? top : this.top;
             this.left = top ? left : this.left;
-
+            
             let field = document.getElementById(this.fieldId);
             field.appendChild(this.createCardHTML());
             this.isOnField = true;
@@ -380,6 +386,7 @@ class Card {
     deleteFromField() {
         document.getElementById(this.cardId).remove();
         this.isOnField = false;
+        this.reset()
         this.isOpen = DECKS.find(deck => deck.deckId == this.deckId).isOpen;
         DECKS.map(item => {
             if (item.deckId == this.deckId && item.isShown) {
@@ -407,7 +414,7 @@ class Card {
         card.style.top = top;
         card.style.left = left;
         card.style.zIndex = zIndex;
-        card.style.transform = `scale(${this.scale})`;
+        card.style.transform = `scale(${scale})`;
 
         const rotateCheckbox = document.getElementById(this.cardId + "-isrotated");
         rotateCheckbox.checked = isRotated;
@@ -675,6 +682,11 @@ document.getElementById("openField").onclick = () => {
         if (event.key == 'Enter') {
             event.preventDefault();
             fieldByText(savedTextField.value);
+            openForm.remove();
+            sendToWS();
+        }
+        if ((event.key == 'Escape') || (event.key == 'Esc')) {
+            event.preventDefault();
             openForm.remove();
         }
     }
