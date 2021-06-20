@@ -492,6 +492,7 @@ class Deck {
             id = Math.floor(Math.random() * (cardsInDeck.length))
             cardsInDeck[id].addToField()
         }
+        sendToWS();
     }
     showDeck() {
         const deckElement = document.getElementById("deck-box");
