@@ -1,0 +1,14 @@
+{
+  "name": "tanks",
+  "version": "1.0.0",
+  "description": "tanks game for test",
+  "main": "srv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "komalapa",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.5.0"
+  }
+}
