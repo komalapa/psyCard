@@ -1,17 +1,17 @@
 const FIELD_ID = "field";
 const USER_ID = Math.random().toString(36).substr(2, 9);
 const DECKS = []; //массив колод в комнате
-let selectedDeck = null; //0;
+let selectedDeck = null; 
 
 function deleteAllCards() { //delete all cardc from field
-    let onFieldElems = document.getElementById(FIELD_ID).childNodes
+    let onFieldElems = document.getElementById(FIELD_ID).childNodes;
     onFieldElems.forEach((e) => { //помечаем карты в колодах как не на поле
         if (e.classList && e.classList.contains("card")) {
-            let cardDeck = DECKS.find((deck) => (deck.deckId == e.id.split("-")[0]))
+            let cardDeck = DECKS.find((deck) => (deck.deckId == e.id.split("-")[0]));
             cardDeck.cards[e.id.split("-")[1]].reset();
         }
     })
-    document.getElementById(FIELD_ID).innerHTML = ''
+    document.getElementById(FIELD_ID).innerHTML = '';
 }
 
 function fieldByText(text) { //put or move cards on field by json text config 
@@ -40,7 +40,7 @@ function fieldByText(text) { //put or move cards on field by json text config
         })
     } catch (err) {
         if (err) {
-            console.log("Не удалось распознать данные", err)
+            console.log("Не удалось распознать данные", err);
         }
     }
 }
@@ -53,8 +53,8 @@ function getDataForSend() { //prepare data for send or save
     let onFieldElems = document.getElementById(FIELD_ID).childNodes
     onFieldElems.forEach((element) => { //собираем информацию о картах на поле:
         if (element.classList && element.classList.contains("card")) {
-            let cardDeck = DECKS.find((deck) => (deck.deckId == element.id.split("-")[0]))
-            dataForSave.push(cardDeck.cards[element.id.split("-")[1]])
+            let cardDeck = DECKS.find((deck) => (deck.deckId == element.id.split("-")[0]));
+            dataForSave.push(cardDeck.cards[element.id.split("-")[1]]);
         }
     })
     return JSON.stringify(dataForSave);
@@ -88,17 +88,15 @@ function openWS(isReopening = false) {
             alert(`[error] Ошибка при соединение с сервером ${error.message}`);
         };
     } else {
-        alert('Соединение активно')
+        alert('Соединение активно');
     }
     //return socket
 }
-openWS()
+openWS();
 
 function sendToWS() {
     socket.send(getDataForSend());
 }
-
-
 
 //=================================================================================//
 //                                  Карта                                          //
@@ -119,7 +117,7 @@ class Card {
         this.top = "50px";
         this.left = "50px";
         this.cardImg = img;
-        this.isHorizontal = isHorizontal
+        this.isHorizontal = isHorizontal;
     }
     reset() {
 
@@ -140,12 +138,12 @@ class Card {
     createCardHTML() {
         let cardImgWrp = document.createElement("div"); //оболочка позволяет отделить преобразования. Отражается изображение, а переворачивается оболочка.
         cardImgWrp.id = this.cardId + "-img-wrp";
-        cardImgWrp.className = "card-img-wrp"
+        cardImgWrp.className = "card-img-wrp";
 
         let cardImg = document.createElement("img");
         cardImg.src = this.cardImg;
         cardImg.id = this.cardId + "-img";
-        cardImgWrp.appendChild(cardImg)
+        cardImgWrp.appendChild(cardImg);
 
 
         let newCardControls = document.createElement("div");
@@ -170,7 +168,7 @@ class Card {
             if (rotateCheckbox.checked) {
                 document.getElementById(this.cardId + "-img-wrp").classList.add("rotated-card");
             } else {
-                document.getElementById(this.cardId + "-img-wrp").classList.remove("rotated-card");;
+                document.getElementById(this.cardId + "-img-wrp").classList.remove("rotated-card");
             }
         }
         rotateIconWrp.appendChild(rotateCheckbox); //собралась кнопка
@@ -248,7 +246,7 @@ class Card {
         mirrorCheckbox.name = this.cardId + "-ismirrorred";
         mirrorCheckbox.checked = this.isMirrorred;
         if (mirrorCheckbox.checked) {
-            cardImg.classList.add("mirrorred-card")
+            cardImg.classList.add("mirrorred-card");
         } else {
             cardImg.classList.remove("mirrorred-card");
         }
@@ -256,7 +254,7 @@ class Card {
             this.isMirrorred = mirrorCheckbox.checked;
             sendToWS();
             if (mirrorCheckbox.checked) {
-                document.getElementById(this.cardId + "-img").classList.add("mirrorred-card")
+                document.getElementById(this.cardId + "-img").classList.add("mirrorred-card");
             } else {
                 document.getElementById(this.cardId + "-img").classList.remove("mirrorred-card");
             }
@@ -279,14 +277,14 @@ class Card {
         openCheckbox.checked = this.isOpen; //приводим в соответствие вид карты и содержимое объекта
         //if будет методом класса по сокрытию карты
         if (openCheckbox.checked) {
-            cardImg.classList.remove("hidden-card")
+            cardImg.classList.remove("hidden-card");
         } else {
             cardImg.classList.add("hidden-card");
         }
         openCheckbox.onchange = () => {
             this.isOpen = openCheckbox.checked;
             if (openCheckbox.checked) {
-                document.getElementById(this.cardId + "-img").classList.remove("hidden-card")
+                document.getElementById(this.cardId + "-img").classList.remove("hidden-card");
             } else {
                 document.getElementById(this.cardId + "-img").classList.add("hidden-card");
             }
@@ -299,7 +297,7 @@ class Card {
         let newCardHTML = document.createElement("div");
         newCardHTML.className = "card";
         if (this.isHorizontal) {
-            newCardHTML.classList.add("card-horizontal")
+            newCardHTML.classList.add("card-horizontal");
         }
         newCardHTML.id = this.cardId;
 
@@ -334,9 +332,8 @@ class Card {
             } else {
                 newCardHTML.style.zIndex = 1600; //убирать карту под меню неудобно
                 if (!that.isOnField) {
-                    that.addToField(event.pageY - newCardHTML.offsetHeight / 2 + 'px', event.pageX - newCardHTML.offsetWidth / 2 + 'px')
-                    newCardHTML = document.getElementById(that.cardId)
-
+                    that.addToField(event.pageY - newCardHTML.offsetHeight / 2 + 'px', event.pageX - newCardHTML.offsetWidth / 2 + 'px');
+                    newCardHTML = document.getElementById(that.cardId);
                 }
 
                 function moveAt(pageX, pageY) {
@@ -358,11 +355,9 @@ class Card {
                     newCardHTML.onmouseup = null;
                     newCardHTML.style.zIndex = that.zIndex;
                     clearInterval(timer);
-                };
+                }
             }
-
-        };
-
+        }
         //END drag&grop
         return newCardHTML;
     }
@@ -379,19 +374,19 @@ class Card {
         DECKS.map(item => {
             if (item.deckId == this.deckId && item.isShown) {
                 item.emptyDeckBox();
-                item.showDeck()
+                item.showDeck();
             }
         })
     }
     deleteFromField() {
         document.getElementById(this.cardId).remove();
         this.isOnField = false;
-        this.reset()
+        this.reset();
         this.isOpen = DECKS.find(deck => deck.deckId == this.deckId).isOpen;
         DECKS.map(item => {
             if (item.deckId == this.deckId && item.isShown) {
                 item.emptyDeckBox();
-                item.showDeck()
+                item.showDeck();
             }
         })
         sendToWS();
@@ -400,11 +395,10 @@ class Card {
         this.isOpen = (typeof isOpen !== 'undefined') ? !this.isOpen : isOpen;
         document.getElementById(this.cardId + "-isopen").checked = this.isOpen;
         if (this.isOpen) {
-            document.getElementById(this.cardId + "-img").classList.remove("hidden-card")
+            document.getElementById(this.cardId + "-img").classList.remove("hidden-card");
         } else {
             document.getElementById(this.cardId + "-img").classList.add("hidden-card");
         }
-
     }
 
     refreshByWS(top, left, isRotated, isOpen, isMirrorred, scale, zIndex) {
@@ -428,7 +422,7 @@ class Card {
         openCheckbox.checked = isOpen;
 
         if (openCheckbox.checked) {
-            cardImg.classList.remove("hidden-card")
+            cardImg.classList.remove("hidden-card");
         } else {
             cardImg.classList.add("hidden-card");
         }
@@ -436,11 +430,10 @@ class Card {
         const mirrorCheckbox = document.getElementById(this.cardId + "-ismirrorred");
         mirrorCheckbox.checked = isMirrorred;
         if (mirrorCheckbox.checked) {
-            cardImg.classList.add("mirrorred-card")
+            cardImg.classList.add("mirrorred-card");
         } else {
             cardImg.classList.remove("mirrorred-card");
         }
-
     }
 }
 //=================================================================================//
@@ -456,7 +449,7 @@ class Deck {
         this.isOpen = false; //false - рубашкой вверх
         this.scale = 1;
         this.cards = []; //Массив всех карт колоды
-        cardImgs.map((item, index) => this.cards[index] = new Card(deckId, index, item, height, width, scale, isHorizontal))
+        cardImgs.map((item, index) => this.cards[index] = new Card(deckId, index, item, height, width, scale, isHorizontal));
         this.pushCardOnField = this.pushCardOnField.bind(this);
         this.shuffle = this.shuffle.bind(this);
         this.open = this.open.bind(this);
@@ -468,29 +461,29 @@ class Deck {
     shuffle() {
         this.cards.sort(() => Math.random() - 0.5);
         this.emptyDeckBox();
-        this.showDeck()
+        this.showDeck();
     }
     open() {
-        this.isOpen = !this.isOpen
+        this.isOpen = !this.isOpen;
         this.cards.map(item => {
             if (!item.isOnField) {
-                item.open(this.isOpen)
+                item.open(this.isOpen);
             }
         })
         this.emptyDeckBox();
-        this.showDeck()
+        this.showDeck();
     }
     pushCardOnField(id = null, x = "50px", y = "50px") {
         if (typeof id == "number") {
-            this.cards[id].addToField()
+            this.cards[id].addToField();
         } else {
             const cardsInDeck = DECKS.filter(item => item.deckId == this.deckId)[0].cards.filter(item => !item.isOnField);
             if (cardsInDeck.length < 1) {
                 alert("В колоде кончились карты");
                 return
             }
-            id = Math.floor(Math.random() * (cardsInDeck.length))
-            cardsInDeck[id].addToField()
+            id = Math.floor(Math.random() * (cardsInDeck.length));
+            cardsInDeck[id].addToField();
         }
         sendToWS();
     }
@@ -530,26 +523,26 @@ const genDeckSelectorMenu = () => {
                 newAvailableDeck.id = "available-deck-" + i;
                 newAvailableDeck.title = DECKS[i].name;
                 if (typeof (selectedDeck) == "number") { //(document.getElementById("available-deck-"+selectedDeck)){
-                    document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck")
+                    document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck");
                     DECKS[selectedDeck].emptyDeckBox();
                 }
-                newAvailableDeck.classList.add("selected-deck")
+                newAvailableDeck.classList.add("selected-deck");
                 selectedDeck = i;
                 DECKS[selectedDeck].emptyDeckBox();
-                DECKS[selectedDeck].showDeck()
+                DECKS[selectedDeck].showDeck();
                 newAvailableDeck.onclick = () => {
                     if (typeof (selectedDeck) == "number") { //(document.getElementById("available-deck-"+selectedDeck)){
-                        document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck")
+                        document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck");
                         DECKS[selectedDeck].emptyDeckBox();
                     }
 
                     selectedDeck = i;
                     DECKS[selectedDeck].showDeck();
-                    document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck")
+                    document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck");
                 }
-                document.getElementById("available-decks-selector").appendChild(newAvailableDeck)
+                document.getElementById("available-decks-selector").appendChild(newAvailableDeck);
             } else {
-                document.getElementById("available-deck-" + i).remove()
+                document.getElementById("available-deck-" + i).remove();
                 if (selectedDeck == i) {
                     DECKS[selectedDeck].emptyDeckBox();
                     selectedDeck = null;
@@ -559,20 +552,20 @@ const genDeckSelectorMenu = () => {
 
         menuItemLabel.prepend(menuItemCheckbox);
         menuItem.appendChild(menuItemLabel);
-        deckSelector.appendChild(menuItem)
+        deckSelector.appendChild(menuItem);
     }
 }
 
 //Добавление колоды в интерфейс. Используется в файлах колод
 const addDeck = (name, id, imgs, height = "170px", width = "120px", scale = 1, isHorizontal = false) => {
     DECKS.push(new Deck(name, id, imgs, height, width, scale, isHorizontal));
-    genDeckSelectorMenu()
+    genDeckSelectorMenu();
 }
 
+//DEBUG
 const imgsPoker = ["./img/king.png", "./img/queen.png", "./img/jack.png", "./img/king.png", "./img/queen.png", "./img/jack.png"]
-
 addDeck("Покерная колода", "poker", imgsPoker);
-
+//endDEBUG
 
 //=================================================================================//
 //                                  Кнопки колоды                                  //
@@ -581,7 +574,7 @@ addDeck("Покерная колода", "poker", imgsPoker);
 const pushToFieldBtn = document.getElementById("deck-push-to-field-btn");
 pushToFieldBtn.onclick = () => {
     if (typeof (selectedDeck) == "number") {
-        DECKS[selectedDeck].pushCardOnField()
+        DECKS[selectedDeck].pushCardOnField();
     }
 };
 //перемешивание текущей колоды
@@ -606,10 +599,10 @@ const cardsViewCheckbox = document.getElementById("deck-control-cards-view");
 cardsViewBtn.onclick = () => {
     const deckBox = document.getElementById("deck-box");
     if (cardsViewCheckbox.checked) {
-        deckBox.classList.remove("cards-split")
+        deckBox.classList.remove("cards-split");
         deckBox.classList.add("cards-overlap");
     } else {
-        deckBox.classList.remove("cards-overlap")
+        deckBox.classList.remove("cards-overlap");
         deckBox.classList.add("cards-split");
     }
 }
@@ -626,8 +619,8 @@ nextDeckBtn.onclick = () => {
         if (selectedDeck != oldSelectedDeck) {
             DECKS[oldSelectedDeck].emptyDeckBox();
             DECKS[selectedDeck].showDeck();
-            document.getElementById("available-deck-" + oldSelectedDeck).classList.remove("selected-deck")
-            document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck")
+            document.getElementById("available-deck-" + oldSelectedDeck).classList.remove("selected-deck");
+            document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck");
         }
     }
 }
@@ -643,8 +636,8 @@ prevDeckBtn.onclick = () => {
         if (selectedDeck != oldSelectedDeck) {
             DECKS[oldSelectedDeck].emptyDeckBox();
             DECKS[selectedDeck].showDeck();
-            document.getElementById("available-deck-" + oldSelectedDeck).classList.remove("selected-deck")
-            document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck")
+            document.getElementById("available-deck-" + oldSelectedDeck).classList.remove("selected-deck");
+            document.getElementById("available-deck-" + selectedDeck).classList.add("selected-deck");
         }
     }
 }
@@ -660,7 +653,7 @@ newFieldBtn.onclick = () => {
         deleteAllCards();
         if (typeof (selectedDeck) == "number") {
             DECKS[selectedDeck].emptyDeckBox();
-            document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck")
+            document.getElementById("available-deck-" + selectedDeck).classList.remove("selected-deck");
             selectedDeck = null;
         }
     }
@@ -670,14 +663,13 @@ document.getElementById("openField").onclick = () => {
     let openForm = document.createElement("form");
     openForm.id = "open-field-form";
     openForm.style.position = "absolute";
-    openForm.style.width = "50%"
-    openForm.style.height = "50%"
+    openForm.style.width = "50%";
+    openForm.style.height = "50%";
     let savedTextField = document.createElement("textarea");
-    savedTextField.style.width = "100%"
-    savedTextField.style.height = "100%"
-    savedTextField.placeholder = "Вставьте текст сохранения сюда"
+    savedTextField.style.width = "100%";
+    savedTextField.style.height = "100%";
+    savedTextField.placeholder = "Вставьте текст сохранения сюда";
     document.getElementById(FIELD_ID).appendChild(openForm);
-
 
     savedTextField.onkeydown = (event) => {
         if (event.key == 'Enter') {
@@ -693,15 +685,15 @@ document.getElementById("openField").onclick = () => {
     }
 
     openForm.appendChild(savedTextField);
-    openForm.onsubmit = (evt) => {
-        evt.preventDefault();
-        try {
-            let newDECKS = JSON.parse(savedTextField.value)
-        } catch {
-            alert("Не удалось распознать данные")
-        }
-        document.getElementById("openForm").remove();
-    }
+    // openForm.onsubmit = (evt) => {
+    //     evt.preventDefault();
+    //     try {
+    //         let newDECKS = JSON.parse(savedTextField.value)
+    //     } catch {
+    //         alert("Не удалось распознать данные")
+    //     }
+    //     document.getElementById("openForm").remove();
+    // }
 
 
 
@@ -710,7 +702,7 @@ document.getElementById("openField").onclick = () => {
 document.getElementById("saveField").onclick = () => {
     navigator.clipboard.writeText(getDataForSend())
         .then(() => {
-            alert("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл")
+            alert("Данные скопированы. Сохраните скопированные данные в пустой текстовый файл");
         })
         .catch(err => {
             console.log('Something went wrong', err);
@@ -729,11 +721,11 @@ fieldGridBtn.onclick = () => {
     if (fieldGridCheckBox.checked) {
         if (fieldChessCheckBox) {
             fieldChessCheckBox.checked = false;
-            field.classList.remove("chess-on-field")
+            field.classList.remove("chess-on-field");
         }
         field.classList.add("grid-on-field");
     } else {
-        field.classList.remove("grid-on-field")
+        field.classList.remove("grid-on-field");
     }
 }
 
@@ -746,10 +738,10 @@ fieldChessBtn.onclick = () => {
     if (fieldChessCheckBox.checked) {
         if (fieldGridCheckBox.checked) {
             fieldGridCheckBox.checked = false;
-            field.classList.remove("grid-on-field")
+            field.classList.remove("grid-on-field");
         }
-        field.classList.add("chess-on-field")
+        field.classList.add("chess-on-field");
     } else {
-        field.classList.remove("chess-on-field")
+        field.classList.remove("chess-on-field");
     }
 }
